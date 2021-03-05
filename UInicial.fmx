@@ -13618,7 +13618,7 @@ object FormInicial: TFormInicial
     Size.PlatformDefault = False
     StyleLookup = 'TabControlStyle1'
     TabHeight = 49.000000000000000000
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 0
     TabPosition = PlatformDefault
     Sizes = (
@@ -13634,7 +13634,7 @@ object FormInicial: TFormInicial
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 84.000000000000000000
       Size.Height = 49.000000000000000000
       Size.PlatformDefault = False
@@ -14504,7 +14504,7 @@ object FormInicial: TFormInicial
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 86.000000000000000000
       Size.Height = 49.000000000000000000
       Size.PlatformDefault = False
