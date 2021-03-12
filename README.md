@@ -1,11 +1,9 @@
-h1 align="center">
-  Guarda-Senha
-</h1>
+
+## Guarda-Senha
 
 #### Um aplicativo muito útil para você cadastrar suas senhas sem preocupação, onde você só precisará lembrar de apenas uma senha.
 
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
-![Badge](https://img.shields.io/badge/Blog-Rocketseat-%237159c1?style=flate-square&logo=ghost)
 [![PRs Welcome](https://img.shields.io/badge/contribuition-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
 <p align="center">
