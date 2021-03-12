@@ -1,5 +1,5 @@
 
-## Guarda-Senha
+## Guarda - Senhas
 
 #### Um aplicativo muito útil para você cadastrar suas senhas sem preocupação, onde você só precisará lembrar de apenas uma senha.
 
