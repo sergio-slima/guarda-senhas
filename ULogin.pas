@@ -18,13 +18,10 @@ type
     Layout1: TLayout;
     Layout2: TLayout;
     Layout3: TLayout;
-    Image2: TImage;
     Label1: TLabel;
-    Rectangle2: TRectangle;
-    EdtLogin_Email: TEdit;
     Rectangle3: TRectangle;
-    EdtLogin_Senha: TEdit;
-    BtnLogin: TRectangle;
+    EdtSenha: TEdit;
+    BtnAcessar: TRectangle;
     Label2: TLabel;
     Layout4: TLayout;
     Image3: TImage;
@@ -39,9 +36,10 @@ type
     Label4: TLabel;
     Rectangle7: TRectangle;
     EdtConta_Email: TEdit;
+    Image2: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure BtnLoginClick(Sender: TObject);
+    procedure BtnAcessarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -57,12 +55,12 @@ implementation
 
 uses UDM, UPrincipal;
 
-procedure TFormLogin.BtnLoginClick(Sender: TObject);
+procedure TFormLogin.BtnAcessarClick(Sender: TObject);
 var
   erro: string;
   id_usuario: integer;
 begin
-  if not DM.ValidaLogin(EdtLogin_Email.Text, EdtLogin_Senha.Text, id_usuario, erro) then
+  if not DM.ValidaLogin(EdtSenha.Text, id_usuario, erro) then
   begin
     ShowMessage(erro);
     Exit;
@@ -81,12 +79,6 @@ procedure TFormLogin.FormCreate(Sender: TObject);
 begin
   TabControl1.ActiveTab := TabInicial;
 
-  //configurar servidor
-  {$IFDEF DEBUG}
-  DM.RESTClient.BaseURL := 'http://localhost:8082';
-  {$ELSE}
-  DM.RESTClient.BaseURL := 'http://localhost:8082';
-  {$ENDIF}
 end;
 
 procedure TFormLogin.FormShow(Sender: TObject);

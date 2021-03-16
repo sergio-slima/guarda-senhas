@@ -5,39 +5,19 @@ interface
 uses
   System.SysUtils, System.Classes, REST.Types, REST.Client,
   REST.Authenticator.Basic, Data.Bind.Components, Data.Bind.ObjectScope,
-  System.JSON;
+  System.JSON, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
+  FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
+  FireDAC.Stan.Async, FireDAC.Phys, FireDAC.FMXUI.Wait, Data.DB,
+  FireDAC.Comp.Client;
 
 type
   TDM = class(TDataModule)
-    RESTClient: TRESTClient;
-    ReqLogin: TRESTRequest;
-    HTTPBasicAuthenticator: THTTPBasicAuthenticator;
-    ReqCategoria: TRESTRequest;
-    ReqEmpresa: TRESTRequest;
-    ReqServico: TRESTRequest;
-    ReqHorario: TRESTRequest;
-    ReqAgendar: TRESTRequest;
-    ReqReserva: TRESTRequest;
-    ReqExcluir: TRESTRequest;
+    Conexao: TFDConnection;
   private
     { Private declarations }
   public
     { Public declarations }
-    function ValidaLogin(email, senha: String; out id_usuario: integer; out erro: string): Boolean;
-    function ListarCategoria(cidade: String; out jsonArray: TJsonArray;
-      erro: string): Boolean;
-    function ListarEmpresa(cidade, busca, ind_foto, id_empresa: String;
-                           id_categoria: integer;
-                           out jsonArray: TJsonArray; erro: string): Boolean;
-    function ListarServico(id_empresa: integer; out jsonArray: TJsonArray;
-      erro: string): Boolean;
-    function ListarHorario(id_servico: integer; dt: TDate;
-      out jsonArray: TJsonArray; out erro: string): boolean;
-    function Agendar(id_usuario, id_servico: integer; dt: TDate; hora: string;
-      out id_reserva: integer; out erro: string): boolean;
-    function ListarReserva(id_usuario: integer; out jsonArray: TJsonArray;
-      out erro: string): boolean;
-    function ExcluirReserva(id_reserva: integer; out erro: string): boolean;
+    function ValidaLogin(senha: String; out id_usuario: integer; out erro: string): Boolean;
   end;
 
 var
@@ -49,300 +29,34 @@ implementation
 
 {$R *.dfm}
 
-function TDM.ValidaLogin(email,senha: String; out id_usuario: integer; out erro: string): Boolean;
+function TDM.ValidaLogin(senha: String; out id_usuario: integer; out erro: string): Boolean;
 var
-  json : string;
-  jsonObj: TJsonObject;
+  qry : TFDQuery;
 begin
+  Result:= False;
   erro := '';
-  id_usuario := 0;
 
-  with ReqLogin do
-  begin
-    Params.Clear;
-    AddParameter('email', email, TRESTRequestParameterKind.pkGETorPOST);
-    AddParameter('senha', senha, TRESTRequestParameterKind.pkGETorPOST);
-    Execute;
-  end;
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
 
-  if ReqLogin.Response.StatusCode <> 200 then
-  begin
-    Result:= false;
-    erro:= 'Erro ao validar login: ' + ReqLogin.Response.StatusCode.ToString;
-  end else
-  begin
-    json := ReqLogin.Response.JSONValue.ToString;
-    jsonObj := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(json), 0) as TJSONObject;
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT ID_USUARIO, EMAIL, NASCIMENTO, SENHA');
+    qry.SQL.Add('FROM USUARIOS');
+    qry.SQL.Add('WHERE SENHA = :SENHA');
+    qry.ParamByName('SENHA').Value := senha;
+    qry.Open;
 
-    if jsonObj.GetValue('retorno').Value = 'OK' then
+    if qry.RecordCount > 0 then
     begin
-      id_usuario := jsonObj.GetValue('id_usuario').Value.ToInteger;
-      Result:= true;
+      id_usuario:= qry.FieldByName('id_usuario').AsInteger;
+      Result := True;
     end else
-    begin
-      Result:= false;
-      erro:= jsonObj.GetValue('retorno').Value;
-    end;
-
-    jsonObj.DisposeOf;
+      erro:= 'Senha inválida ou não existe!';
+  finally
+    qry.DisposeOf;
   end;
-end;
-
-function TDM.ListarCategoria(cidade: String; out jsonArray: TJsonArray; erro: string): Boolean;
-var
-  json : string;
-begin
-  erro := '';
-
-  try
-    with ReqCategoria do
-    begin
-      Params.Clear;
-      AddParameter('cidade', cidade, TRESTRequestParameterKind.pkGETorPOST);
-      Execute;
-    end;
-  except on ex:Exception do
-    begin
-      Result:=false;
-      erro:='Erro ao listar categorias: ' + ex.Message;
-      Exit;
-    end;
-  end;
-
-  if ReqCategoria.Response.StatusCode <> 200 then
-  begin
-    Result:=false;
-    erro:='Erro ao listar categorias: ' + ReqCategoria.Response.StatusCode.ToString;
-  end else
-  begin
-    json:= ReqCategoria.Response.JSONValue.ToString;
-    jsonArray:= TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(json), 0) as TJSONArray;
-    Result:= true;
-  end;
-end;
-
-function TDM.ListarEmpresa(cidade, busca, ind_foto, id_empresa: String;
-                           id_categoria: integer;
-                           out jsonArray: TJsonArray; erro: string): Boolean;
-var
-  json : string;
-begin
-  erro := '';
-
-  try
-    with ReqEmpresa do
-    begin
-      Params.Clear;
-      AddParameter('cidade', cidade, TRESTRequestParameterKind.pkGETorPOST);
-      AddParameter('id_categoria', id_categoria.ToString, TRESTRequestParameterKind.pkGETorPOST);
-      AddParameter('id_empresa', id_empresa, TRESTRequestParameterKind.pkGETorPOST);
-      AddParameter('busca', busca, TRESTRequestParameterKind.pkGETorPOST);
-      AddParameter('ind_foto', ind_foto, TRESTRequestParameterKind.pkGETorPOST);
-      Execute;
-    end;
-  except on ex:Exception do
-    begin
-      Result:=false;
-      erro:='Erro ao listar empresas: ' + ex.Message;
-      Exit;
-    end;
-  end;
-
-  if ReqEmpresa.Response.StatusCode <> 200 then
-  begin
-    Result:=false;
-    erro:='Erro ao listar empresas: ' + ReqEmpresa.Response.StatusCode.ToString;
-  end else
-  begin
-    json:= ReqEmpresa.Response.JSONValue.ToString;
-    jsonArray:= TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(json), 0) as TJSONArray;
-    Result:= true;
-  end;
-end;
-
-function TDM.ListarServico(id_empresa: integer; out jsonArray: TJsonArray; erro: string): Boolean;
-var
-  json : string;
-begin
-  erro := '';
-
-  try
-    with ReqServico do
-    begin
-      Params.Clear;
-      AddParameter('id_empresa', id_empresa.ToString, TRESTRequestParameterKind.pkGETorPOST);
-      Execute;
-    end;
-  except on ex:Exception do
-    begin
-      Result:=false;
-      erro:='Erro ao listar serviços: ' + ex.Message;
-      Exit;
-    end;
-  end;
-
-  if ReqServico.Response.StatusCode <> 200 then
-  begin
-    Result:=false;
-    erro:='Erro ao listar serviços: ' + ReqServico.Response.StatusCode.ToString;
-  end else
-  begin
-    json:= ReqServico.Response.JSONValue.ToString;
-    jsonArray:= TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(json), 0) as TJSONArray;
-    Result:= true;
-  end;
-end;
-
-function TDm.ListarHorario(id_servico: integer; dt: TDate;
-                           out jsonArray: TJsonArray; out erro: string): boolean;
-var
-    json : string;
-begin
-    erro := '';
-
-    try
-        with ReqHorario do
-        begin
-            Params.Clear;
-            AddParameter('id_servico', id_servico.ToString, TRESTRequestParameterKind.pkGETorPOST);
-            AddParameter('dt', FormatDateTime('yyyy-mm-dd', dt), TRESTRequestParameterKind.pkGETorPOST);
-            Execute;
-        end;
-    except on ex:exception do
-        begin
-            Result := false;
-            erro := 'Erro ao listar horários: ' + ex.Message;
-            exit;
-        end;
-    end;
-
-    if ReqHorario.Response.StatusCode <> 200 then
-    begin
-        Result := false;
-        erro := 'Erro ao listar horários: ' + ReqHorario.Response.StatusCode.ToString;
-    end
-    else
-    begin
-        json := ReqHorario.Response.JSONValue.ToString;
-        jsonArray := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(json), 0) as TJSONArray;
-        Result := true;
-    end;
-end;
-
-function TDm.Agendar(id_usuario, id_servico: integer;
-                      dt: TDate;
-                      hora: string;
-                      out id_reserva: integer; out erro: string): boolean;
-var
-    json : string;
-    jsonObj : TJsonObject;
-begin
-    erro := '';
-
-    with ReqAgendar do
-    begin
-        Params.Clear;
-        AddParameter('id_usuario', id_usuario.ToString, TRESTRequestParameterKind.pkGETorPOST);
-        AddParameter('id_servico', id_servico.ToString, TRESTRequestParameterKind.pkGETorPOST);
-        AddParameter('dt', FormatDateTime('yyyy-mm-dd', dt), TRESTRequestParameterKind.pkGETorPOST);
-        AddParameter('hora', hora, TRESTRequestParameterKind.pkGETorPOST);
-        Execute;
-    end;
-
-    if ReqAgendar.Response.StatusCode <> 200 then
-    begin
-        Result := false;
-        erro := 'Erro ao agendar: ' + ReqAgendar.Response.StatusCode.ToString;
-    end
-    else
-    begin
-        json := ReqAgendar.Response.JSONValue.ToString;
-        jsonObj := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(json), 0) as TJSONObject;
-
-        if jsonObj.GetValue('retorno').Value = 'OK' then
-        begin
-            id_reserva := jsonObj.GetValue('id_reserva').Value.ToInteger;
-            Result := true;
-        end
-        else
-        begin
-            Result := false;
-            erro := jsonObj.GetValue('retorno').Value;
-        end;
-
-        jsonObj.DisposeOf;
-    end;
-end;
-
-function TDm.ListarReserva(id_usuario: integer; out jsonArray: TJsonArray; out erro: string): boolean;
-var
-    json : string;
-begin
-    erro := '';
-
-    try
-        with ReqReserva do
-        begin
-            Params.Clear;
-            AddParameter('id_usuario', id_usuario.ToString, TRESTRequestParameterKind.pkGETorPOST);
-            Execute;
-        end;
-    except on ex:exception do
-        begin
-            Result := false;
-            erro := 'Erro ao listar agendamentos: ' + ex.Message;
-            exit;
-        end;
-    end;
-
-    if ReqReserva.Response.StatusCode <> 200 then
-    begin
-        Result := false;
-        erro := 'Erro ao listar agendamentos: ' + ReqReserva.Response.StatusCode.ToString;
-    end
-    else
-    begin
-        json := ReqReserva.Response.JSONValue.ToString;
-        jsonArray := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(json), 0) as TJSONArray;
-        Result := true;
-    end;
-end;
-
-function TDm.ExcluirReserva(id_reserva: integer;
-                            out erro: string): boolean;
-var
-    json : string;
-    jsonObj : TJsonObject;
-begin
-    erro := '';
-
-    with ReqExcluir do
-    begin
-        Params.Clear;
-        AddParameter('id_reserva', id_reserva.ToString, TRESTRequestParameterKind.pkGETorPOST);
-        Execute;
-    end;
-
-    if ReqExcluir.Response.StatusCode <> 200 then
-    begin
-        Result := false;
-        erro := 'Erro ao excluir: ' + ReqExcluir.Response.StatusCode.ToString;
-    end
-    else
-    begin
-        json := ReqExcluir.Response.JSONValue.ToString;
-        jsonObj := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(json), 0) as TJSONObject;
-
-        if jsonObj.GetValue('retorno').Value = 'OK' then
-            Result := true
-        else
-        begin
-            Result := false;
-            erro := jsonObj.GetValue('retorno').Value;
-        end;
-
-        jsonObj.DisposeOf;
-    end;
 end;
 
 end.
