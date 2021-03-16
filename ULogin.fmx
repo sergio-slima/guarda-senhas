@@ -532,7 +532,7 @@ object FormLogin: TFormLogin
       object Layout3: TLayout
         Align = Center
         Size.Width = 289.000000000000000000
-        Size.Height = 200.000000000000000000
+        Size.Height = 222.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         object Rectangle3: TRectangle
@@ -714,19 +714,21 @@ object FormLogin: TFormLogin
       object Layout5: TLayout
         Align = Center
         Size.Width = 289.000000000000000000
-        Size.Height = 200.000000000000000000
+        Size.Height = 262.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         object Rectangle4: TRectangle
           Align = Top
           Fill.Color = xFFE9E9E9
+          Margins.Top = 10.000000000000000000
+          Position.Y = 61.000000000000000000
           Size.Width = 289.000000000000000000
           Size.Height = 41.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
           XRadius = 20.500000000000000000
           YRadius = 20.500000000000000000
-          object EdtConta_Nome: TEdit
+          object EdtConta_Nascimento: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             StyleLookup = 'transparentedit'
@@ -740,7 +742,7 @@ object FormLogin: TFormLogin
             Size.Width = 259.000000000000000000
             Size.Height = 32.000000000000000000
             Size.PlatformDefault = False
-            TextPrompt = 'Nome'
+            TextPrompt = 'Data Nascimento'
             StyledSettings = [Family, Style]
           end
         end
@@ -748,7 +750,7 @@ object FormLogin: TFormLogin
           Align = Top
           Fill.Color = xFFE9E9E9
           Margins.Top = 10.000000000000000000
-          Position.Y = 102.000000000000000000
+          Position.Y = 112.000000000000000000
           Size.Width = 289.000000000000000000
           Size.Height = 41.000000000000000000
           Size.PlatformDefault = False
@@ -778,7 +780,7 @@ object FormLogin: TFormLogin
           Align = Top
           Fill.Color = xFF479AAC
           Margins.Top = 10.000000000000000000
-          Position.Y = 153.000000000000000000
+          Position.Y = 163.000000000000000000
           Size.Width = 289.000000000000000000
           Size.Height = 41.000000000000000000
           Size.PlatformDefault = False
@@ -796,13 +798,14 @@ object FormLogin: TFormLogin
             TextSettings.HorzAlign = Center
             Text = 'Cadastrar nova conta'
             TabOrder = 0
+            OnClick = Label3Click
           end
         end
         object Rectangle7: TRectangle
           Align = Top
           Fill.Color = xFFE9E9E9
           Margins.Top = 10.000000000000000000
-          Position.Y = 51.000000000000000000
+          Position.Y = 10.000000000000000000
           Size.Width = 289.000000000000000000
           Size.Height = 41.000000000000000000
           Size.PlatformDefault = False

@@ -27,7 +27,7 @@ type
     Image3: TImage;
     Layout5: TLayout;
     Rectangle4: TRectangle;
-    EdtConta_Nome: TEdit;
+    EdtConta_Nascimento: TEdit;
     Rectangle5: TRectangle;
     EdtConta_Senha: TEdit;
     BtnCadastrar: TRectangle;
@@ -40,6 +40,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
+    procedure Label3Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -84,6 +85,30 @@ end;
 procedure TFormLogin.FormShow(Sender: TObject);
 begin
   TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
+end;
+
+procedure TFormLogin.Label3Click(Sender: TObject);
+var
+  erro: string;
+  id_usuario: integer;
+begin
+  if (EdtConta_Email.Text = '') and
+     (EdtConta_Nascimento = '') and
+     (EdtConta_Senha = '') then
+  begin
+    ShowMessage('Preencha todos os campos!');
+    Exit;
+  end;
+
+  if not DM.ValidaLogin(EdtSenha.Text, id_usuario, erro) then
+  begin
+    ShowMessage(erro);
+    Exit;
+  end else
+  begin
+    ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
+    TabControl1.ActiveTab := TabLogin;
+  end;
 end;
 
 end.
