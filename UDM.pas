@@ -19,7 +19,9 @@ type
     { Private declarations }
   public
     { Public declarations }
-    function ValidaLogin(senha: String; out id_usuario: integer; out erro: string): Boolean;
+    function ValidaSenha(senha: String; out id_usuario: integer; out erro: string): Boolean;
+    function CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
+    function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
   end;
 
 var
@@ -54,7 +56,7 @@ begin
    conexao.Connected := True;
 end;
 
-function TDM.ValidaLogin(senha: String; out id_usuario: integer; out erro: string): Boolean;
+function TDM.ValidaSenha(senha: String; out id_usuario: integer; out erro: string): Boolean;
 var
   qry : TFDQuery;
 begin
@@ -79,6 +81,78 @@ begin
       Result := True;
     end else
       erro:= 'Senha inválida ou não existe!';
+  finally
+    qry.DisposeOf;
+  end;
+end;
+
+function TDM.CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
+var
+  qry : TFDQuery;
+begin
+  Result:= False;
+  erro := '';
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('INSERT INTO (EMAIL, NASCIMENTO, SENHA)');
+    qry.SQL.Add('VALUES (:EMAIL, :NASCIMENTO, :SENHA)');
+    qry.ParamByName('EMAIL').Value := email;
+    qry.ParamByName('NASCIMENTO').Value := nascimento;
+    qry.ParamByName('SENHA').Value := senha;
+    qry.ExecSQL;
+
+    qry.DisposeOf;
+    Result:= True;
+  except
+    erro:= 'Erro ao cadastrar a conta!';
+  end;
+end;
+
+function TDM.ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
+var
+  qry : TFDQuery;
+  id_usuario: integer;
+begin
+  Result:= False;
+  erro := '';
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT ID_USUARIO, EMAIL, NASCIMENTO, SENHA');
+    qry.SQL.Add('FROM USUARIOS');
+    qry.SQL.Add('WHERE EMAIL = :EMAIL');
+    qry.SQL.Add('WHERE NASCIMENTO = :NASCIMENTO');
+    qry.ParamByName('EMAIL').Value := email;
+    qry.ParamByName('NASCIMENTO').Value := nascimento;
+    qry.Open;
+
+    if qry.RecordCount > 0 then
+    begin
+      id_usuario:= qry.FieldByName('id_usuario').AsInteger;
+
+      qry.Close;
+      qry.SQL.Clear;
+      qry.SQL.Add('UPDATE USUARIOS SET SENHA = :SENHA');
+      qry.SQL.Add('WHERE ID_USUARIO = :ID_USUARIO');
+      qry.ParamByName('ID_USUARIO').Value := id_usuario;
+      qry.ParamByName('SENHA').Value := senha;
+      qry.ExecSQL;
+
+      Result:= True;
+    end else
+    begin
+      erro:= 'Conta não existe!';
+    end;
+
   finally
     qry.DisposeOf;
   end;

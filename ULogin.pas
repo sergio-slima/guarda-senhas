@@ -18,7 +18,7 @@ type
     Layout1: TLayout;
     Layout2: TLayout;
     Layout3: TLayout;
-    Label1: TLabel;
+    LblNovaConta: TLabel;
     Rectangle3: TRectangle;
     EdtSenha: TEdit;
     BtnAcessar: TRectangle;
@@ -31,20 +31,24 @@ type
     Rectangle5: TRectangle;
     EdtConta_Senha: TEdit;
     BtnCadastrar: TRectangle;
-    Label3: TLabel;
+    LblCadastrar: TLabel;
     Layout6: TLayout;
     Label4: TLabel;
     Rectangle7: TRectangle;
     EdtConta_Email: TEdit;
     Image2: TImage;
+    LblResetarConta: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
-    procedure Label3Click(Sender: TObject);
+    procedure BtnCadastrarClick(Sender: TObject);
+    procedure LblNovaContaClick(Sender: TObject);
+    procedure LblResetarContaClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    conta_status: String;
   end;
 
 var
@@ -61,7 +65,7 @@ var
   erro: string;
   id_usuario: integer;
 begin
-  if not DM.ValidaLogin(EdtSenha.Text, id_usuario, erro) then
+  if not DM.ValidaSenha(EdtSenha.Text, id_usuario, erro) then
   begin
     ShowMessage(erro);
     Exit;
@@ -76,6 +80,42 @@ begin
   FormLogin.Close;
 end;
 
+procedure TFormLogin.BtnCadastrarClick(Sender: TObject);
+var
+  erro: string;
+  id_usuario: integer;
+begin
+  if (EdtConta_Email.Text = '') and
+     (EdtConta_Nascimento.Text = '') and
+     (EdtConta_Senha.Text = '') then
+  begin
+    ShowMessage('Preencha todos os campos!');
+    Exit;
+  end;
+
+  if conta_status = 'N' then
+  begin
+    if not DM.CadastrarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
+    begin
+      ShowMessage(erro);
+      Exit;
+    end else
+    begin
+      ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
+      TabControl1.ActiveTab := TabLogin;
+    end;
+  end else if conta_status = 'A' then
+    if not DM.ResetarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
+    begin
+      ShowMessage(erro);
+      Exit;
+    end else
+    begin
+      ShowMessage('Senha resetada com sucesso. Faça o Login!');
+      TabControl1.ActiveTab := TabLogin;
+    end;
+end;
+
 procedure TFormLogin.FormCreate(Sender: TObject);
 begin
   TabControl1.ActiveTab := TabInicial;
@@ -87,28 +127,18 @@ begin
   TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
 end;
 
-procedure TFormLogin.Label3Click(Sender: TObject);
-var
-  erro: string;
-  id_usuario: integer;
+procedure TFormLogin.LblNovaContaClick(Sender: TObject);
 begin
-  if (EdtConta_Email.Text = '') and
-     (EdtConta_Nascimento = '') and
-     (EdtConta_Senha = '') then
-  begin
-    ShowMessage('Preencha todos os campos!');
-    Exit;
-  end;
+  TabControl1.ActiveTab := TabNovaConta;
+  conta_status:= 'N';
+  LblCadastrar.Text:='Cadastrar nova conta';
+end;
 
-  if not DM.ValidaLogin(EdtSenha.Text, id_usuario, erro) then
-  begin
-    ShowMessage(erro);
-    Exit;
-  end else
-  begin
-    ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
-    TabControl1.ActiveTab := TabLogin;
-  end;
+procedure TFormLogin.LblResetarContaClick(Sender: TObject);
+begin
+  TabControl1.ActiveTab := TabNovaConta;
+  conta_status:= 'A';
+  LblCadastrar.Text:='Resetar senha';
 end;
 
 end.

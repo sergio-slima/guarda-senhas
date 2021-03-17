@@ -3,7 +3,7 @@ program GuardaSenhas;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  UForm in 'UForm.pas' {Form1},
+  UDbvs in 'UDbvs.pas' {FormDesbravadores},
   UDM in 'UDM.pas' {DM: TDataModule},
   UInicial in 'UInicial.pas' {FormInicial},
   ULogin in 'ULogin.pas' {FormLogin},
@@ -13,12 +13,11 @@ uses
 
 begin
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFormDesbravadores, FormDesbravadores);
   Application.CreateForm(TDM, DM);
   Application.CreateForm(TFormInicial, FormInicial);
   Application.CreateForm(TFormLogin, FormLogin);
   Application.CreateForm(TFormPrincipal, FormPrincipal);
-  Application.Application.CreateForm(TDM, DM);
   Application.CreateForm(TFormInicial, FormInicial);
   Application.FormFactor.Orientations := [TFormOrientation.Portrait];
-
+end.
