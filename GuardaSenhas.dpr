@@ -13,11 +13,8 @@ uses
 
 begin
   Application.Initialize;
-  Application.CreateForm(TFormDesbravadores, FormDesbravadores);
   Application.CreateForm(TDM, DM);
   Application.CreateForm(TFormInicial, FormInicial);
-  Application.CreateForm(TFormLogin, FormLogin);
-  Application.CreateForm(TFormPrincipal, FormPrincipal);
-  Application.CreateForm(TFormInicial, FormInicial);
   Application.FormFactor.Orientations := [TFormOrientation.Portrait];
+  Application.Run;
 end.

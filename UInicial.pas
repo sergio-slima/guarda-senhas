@@ -70,7 +70,7 @@ begin
     Application.CreateForm(TFormLogin, FormLogin);
 
   Application.MainForm := FormLogin;
-  FormLogin.TabControl1.ActiveTab := FormLogin.TabLogin;
+  FormLogin.TabControl1.ActiveTab := FormLogin.TabInicial;
   FormLogin.Show;
   FormInicial.Close;
 end;
@@ -81,7 +81,7 @@ begin
     Application.CreateForm(TFormLogin, FormLogin);
 
   Application.MainForm := FormLogin;
-  FormLogin.TabControl1.ActiveTab := FormLogin.TabNovaConta;
+  FormLogin.TabControl1.ActiveTab := FormLogin.TabInicial;
   FormLogin.Show;
   FormInicial.Close;
 end;

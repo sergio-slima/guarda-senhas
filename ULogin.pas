@@ -44,6 +44,7 @@ type
     procedure BtnCadastrarClick(Sender: TObject);
     procedure LblNovaContaClick(Sender: TObject);
     procedure LblResetarContaClick(Sender: TObject);
+    procedure Label4Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -65,6 +66,11 @@ var
   erro: string;
   id_usuario: integer;
 begin
+  if EdtSenha.Text = '' then
+  begin
+    ShowMessage('Digite sua senha!');
+    Exit;
+  end;
   if not DM.ValidaSenha(EdtSenha.Text, id_usuario, erro) then
   begin
     ShowMessage(erro);
@@ -127,11 +133,18 @@ begin
   TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
 end;
 
+procedure TFormLogin.Label4Click(Sender: TObject);
+begin
+  TabControl1.ActiveTab := TabLogin;
+  TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
+end;
+
 procedure TFormLogin.LblNovaContaClick(Sender: TObject);
 begin
   TabControl1.ActiveTab := TabNovaConta;
   conta_status:= 'N';
   LblCadastrar.Text:='Cadastrar nova conta';
+  TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
 end;
 
 procedure TFormLogin.LblResetarContaClick(Sender: TObject);
@@ -139,6 +152,7 @@ begin
   TabControl1.ActiveTab := TabNovaConta;
   conta_status:= 'A';
   LblCadastrar.Text:='Resetar senha';
+  TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
 end;
 
 end.
