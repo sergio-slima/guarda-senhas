@@ -100,7 +100,7 @@ begin
 
     qry.Close;
     qry.SQL.Clear;
-    qry.SQL.Add('INSERT INTO (EMAIL, NASCIMENTO, SENHA)');
+    qry.SQL.Add('INSERT INTO USUARIOS (EMAIL, NASCIMENTO, SENHA)');
     qry.SQL.Add('VALUES (:EMAIL, :NASCIMENTO, :SENHA)');
     qry.ParamByName('EMAIL').Value := email;
     qry.ParamByName('NASCIMENTO').Value := nascimento;
