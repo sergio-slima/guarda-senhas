@@ -118,7 +118,7 @@ begin
     end else
     begin
       ShowMessage('Senha resetada com sucesso. Faça o Login!');
-      TabControl1.ActiveTab := TabLogin;
+      TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
     end;
 end;
 
@@ -135,13 +135,13 @@ end;
 
 procedure TFormLogin.Label4Click(Sender: TObject);
 begin
-  TabControl1.ActiveTab := TabLogin;
+  //TabControl1.ActiveTab := TabLogin;
   TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
 end;
 
 procedure TFormLogin.LblNovaContaClick(Sender: TObject);
 begin
-  TabControl1.ActiveTab := TabNovaConta;
+//  TabControl1.ActiveTab := TabNovaConta;
   conta_status:= 'N';
   LblCadastrar.Text:='Cadastrar nova conta';
   TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
@@ -149,7 +149,7 @@ end;
 
 procedure TFormLogin.LblResetarContaClick(Sender: TObject);
 begin
-  TabControl1.ActiveTab := TabNovaConta;
+//  TabControl1.ActiveTab := TabNovaConta;
   conta_status:= 'A';
   LblCadastrar.Text:='Resetar senha';
   TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
