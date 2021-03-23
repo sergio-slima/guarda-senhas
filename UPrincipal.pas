@@ -24,22 +24,17 @@ type
     Layout4: TLayout;
     Image5: TImage;
     Layout2: TLayout;
-    Label4: TLabel;
     RtgCidade: TRectangle;
-    EdtCidade: TEdit;
+    EdtPesquisarSenhas: TEdit;
     Image6: TImage;
     LbxCategorias: TListBox;
     Layout3: TLayout;
     Label1: TLabel;
     BtnExplorar_Voltar: TImage;
-    Layout5: TLayout;
-    Label2: TLabel;
     Layout6: TLayout;
     Rectangle1: TRectangle;
     Edit1: TEdit;
     lvExplorar: TListView;
-    BtnExplorar_Buscar: TRectangle;
-    Label3: TLabel;
     Layout7: TLayout;
     Label5: TLabel;
     LbxAgendamentos: TListBox;
@@ -59,11 +54,14 @@ type
     Line3: TLine;
     Line4: TLine;
     ImgSem_Reserva: TImage;
+    Image1: TImage;
+    Image2: TImage;
+    Layout5: TLayout;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure BtnExplorar_VoltarClick(Sender: TObject);
-    procedure EdtCidadeExit(Sender: TObject);
+    procedure EdtPesquisarSenhasExit(Sender: TObject);
     procedure LbxCategoriasItemClick(const Sender: TCustomListBox;
       const Item: TListBoxItem);
   private
@@ -121,7 +119,7 @@ procedure TFormPrincipal.CarregarCategorias(cidade: string);
 begin
 end;
 
-procedure TFormPrincipal.EdtCidadeExit(Sender: TObject);
+procedure TFormPrincipal.EdtPesquisarSenhasExit(Sender: TObject);
 begin
   CarregarCategorias(EdtCidade.Text);
 end;
