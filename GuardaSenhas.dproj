@@ -399,8 +399,8 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="UDbvs.pas">
-            <Form>FormDesbravadores</Form>
+        <DCCReference Include="USenha.pas">
+            <Form>FormSenhas</Form>
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="UDM.pas">

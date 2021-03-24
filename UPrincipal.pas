@@ -64,6 +64,7 @@ type
     procedure EdtPesquisarSenhasExit(Sender: TObject);
     procedure LbxCategoriasItemClick(const Sender: TCustomListBox;
       const Item: TListBoxItem);
+    procedure Image2Click(Sender: TObject);
   private
     procedure MudarAba(img: TImage);
     procedure CarregarCategorias(cidade: string);
@@ -84,7 +85,7 @@ implementation
 
 {$R *.fmx}
 
-uses UDM;
+uses UDM, USenha;
 
 procedure TFormPrincipal.CarregarExplorar(cidade, termo: String; id_categoria: integer);
 begin
@@ -121,7 +122,7 @@ end;
 
 procedure TFormPrincipal.EdtPesquisarSenhasExit(Sender: TObject);
 begin
-  CarregarCategorias(EdtCidade.Text);
+  CarregarCategorias(EdtPesquisarSenhas.Text);
 end;
 
 procedure TFormPrincipal.FormResize(Sender: TObject);
@@ -132,9 +133,21 @@ end;
 procedure TFormPrincipal.FormShow(Sender: TObject);
 begin
   MudarAba(ImgAba1);
-  CarregarCategorias(EdtCidade.Text);
+  CarregarCategorias(EdtPesquisarSenhas.Text);
   //CarregarExplorar('','');
   //CarregarAgendamentos;
+end;
+
+procedure TFormPrincipal.Image2Click(Sender: TObject);
+begin
+  try
+    if not Assigned(FormSenhas) then
+      Application.CreateForm(TFormSenhas, FormSenhas);
+
+    FormSenhas.Show;
+  finally
+    FormSenhas.Free;
+  end;
 end;
 
 procedure TFormPrincipal.ImgAba4Click(Sender: TObject);
@@ -145,7 +158,7 @@ end;
 procedure TFormPrincipal.LbxCategoriasItemClick(const Sender: TCustomListBox;
   const Item: TListBoxItem);
 begin
-  CarregarExplorar(EdtCidade.Text, '', item.Tag);
+  CarregarExplorar(EdtPesquisarSenhas.Text, '', item.Tag);
   MudarAba(ImgAba2);
 end;
 

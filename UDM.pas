@@ -46,6 +46,9 @@ begin
    // table usuarios
    conexao.ExecSQL('CREATE TABLE IF NOT EXISTS usuarios (id_usuario INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, email VARCHAR(70) NOT NULL, nascimento DATE NOT NULL, senha VARCHAR(50) NOT NULL);');
 
+   // table usuarios
+   conexao.ExecSQL('CREATE TABLE IF NOT EXISTS senhas (id_senha INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, descricao VARCHAR(50) NOT NULL, senha VARCHAR(50) NOT NULL, tipo INTEGER NOT NULL, favorito CHAR(1) NOT NULL);');
+
 
 //   if ValidaVersao('1.1') then
 //   begin
