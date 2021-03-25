@@ -1,9 +1,7 @@
 <h1 align="center">
   <img src="./img/logo-oficial.png" alt="Agenda Datas" height="100" width="100">  
-  <p>Agenda Datas</p>
+  <p>Guarda - Senhas</p>
 </h1>
-
-## Guarda - Senhas
 
 #### Um aplicativo muito útil para você cadastrar suas senhas sem preocupação, onde você só precisará lembrar de apenas uma senha.
 
