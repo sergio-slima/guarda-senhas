@@ -23,6 +23,9 @@ type
     function ValidaSenha(senha: String; out id_usuario: integer; out erro: string): Boolean;
     function CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
     function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
+
+    function SalvarSenhas(descricao, senha, favorito: String; tipo: integer; out erro: string): Boolean;
+    function FiltrarSenhas(descricao: String; out erro: string): Boolean;
   end;
 
 var
@@ -58,6 +61,32 @@ begin
    {$ENDIF}
 
    conexao.Connected := True;
+end;
+
+function TDM.FiltrarSenhas(descricao: String): Boolean;
+var
+  qry : TFDQuery;
+begin
+  Result:= False;
+  erro := '';
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM SENHAS');
+    qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
+    qry.ParamByName('DESCRICAO').Value := '%'+descricao+'%';
+    qry.Open;
+
+    if qry.RecordCount > 0 then
+      Result := True;
+
+  finally
+    qry.DisposeOf;
+  end;
 end;
 
 function TDM.ValidaSenha(senha: String; out id_usuario: integer; out erro: string): Boolean;
@@ -159,6 +188,35 @@ begin
 
   finally
     qry.DisposeOf;
+  end;
+end;
+
+function TDM.SalvarSenhas(descricao, senha, favorito: String; tipo: integer;
+  out erro: string): Boolean;
+var
+  qry : TFDQuery;
+begin
+  Result:= False;
+  erro := '';
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('INSERT INTO SENHAS (DESCRICAO, SENHA, FAVORITO, TIPO)');
+    qry.SQL.Add('VALUES (:DESCRICAO, :SENHA, :FAVORITO, :TIPO)');
+    qry.ParamByName('DESCRICAO').Value := descricao;
+    qry.ParamByName('SENHA').Value := senha;
+    qry.ParamByName('FAVORITO').Value := favorito;
+    qry.ParamByName('TIPO').Value := tipo;
+    qry.ExecSQL;
+
+    qry.DisposeOf;
+    Result:= True;
+  except
+    erro:= 'Erro ao cadastrar registro!';
   end;
 end;
 

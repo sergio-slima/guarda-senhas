@@ -16,11 +16,17 @@ type
     Image1: TImage;
     Layout1: TLayout;
     Rectangle7: TRectangle;
-    EdtConta_Email: TEdit;
+    EdtDescricao: TEdit;
     Rectangle1: TRectangle;
-    Edit1: TEdit;
+    EdtSenha: TEdit;
     Layout2: TLayout;
     Image2: TImage;
+    Image3: TImage;
+    Rectangle2: TRectangle;
+    Edit1: TEdit;
+    Layout4: TLayout;
+    Rectangle3: TRectangle;
+    Edit2: TEdit;
   private
     { Private declarations }
   public
