@@ -7,7 +7,11 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Objects,
   FMX.Layouts, FMX.TabControl, FMX.Edit, FMX.Controls.Presentation, FMX.StdCtrls,
   FMX.ListBox, FMX.ListView.Types, FMX.ListView.Appearances,
-  FMX.ListView.Adapters.Base, FMX.ListView, System.JSON;
+  FMX.ListView.Adapters.Base, FMX.ListView, System.JSON, FMX.Advertising,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
 
 type
   TFormPrincipal = class(TForm)
@@ -26,8 +30,7 @@ type
     Layout2: TLayout;
     RtgCidade: TRectangle;
     EdtPesquisarSenhas: TEdit;
-    Image6: TImage;
-    LbxCategorias: TListBox;
+    BtnPesquisar: TImage;
     Layout3: TLayout;
     Label1: TLabel;
     BtnExplorar_Voltar: TImage;
@@ -57,6 +60,9 @@ type
     Image1: TImage;
     Image2: TImage;
     Layout5: TLayout;
+    BannerAd1: TBannerAd;
+    FDQuery1: TFDQuery;
+    lvSenhas: TListView;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -65,10 +71,10 @@ type
     procedure LbxCategoriasItemClick(const Sender: TCustomListBox;
       const Item: TListBoxItem);
     procedure Image2Click(Sender: TObject);
+    procedure BtnPesquisarClick(Sender: TObject);
   private
     procedure MudarAba(img: TImage);
-    procedure CarregarCategorias(cidade: string);
-    procedure CarregarExplorar(cidade, termo: String; id_categoria: integer);
+    procedure AddFiltrarSenhas(id_senha, descricao, login, senha, favorito: String; id_categoria: integer);
     { Private declarations }
   public
     { Public declarations }
@@ -87,10 +93,6 @@ implementation
 
 uses UDM, USenha;
 
-procedure TFormPrincipal.CarregarExplorar(cidade, termo: String; id_categoria: integer);
-begin
-end;
-
 procedure TFormPrincipal.MudarAba(img: TImage);
 begin
   ImgAba1.Opacity := 0.5;
@@ -107,6 +109,12 @@ begin
 
 end;
 
+procedure TFormPrincipal.AddFiltrarSenhas(id_senha, descricao, login, senha,
+  favorito: String; id_categoria: integer);
+begin
+/////////
+end;
+
 procedure TFormPrincipal.BtnExplorar_VoltarClick(Sender: TObject);
 begin
   MudarAba(ImgAba1);
@@ -116,24 +124,20 @@ procedure TFormPrincipal.CarregarAgendamentos;
 begin
 end;
 
-procedure TFormPrincipal.CarregarCategorias(cidade: string);
-begin
-end;
-
 procedure TFormPrincipal.EdtPesquisarSenhasExit(Sender: TObject);
 begin
-  CarregarCategorias(EdtPesquisarSenhas.Text);
+  //CarregarCategorias(EdtPesquisarSenhas.Text);
 end;
 
 procedure TFormPrincipal.FormResize(Sender: TObject);
 begin
-  LbxCategorias.Columns := Trunc(LbxCategorias.Width / 105);
+  //LbxCategorias.Columns := Trunc(LbxCategorias.Width / 105);
 end;
 
 procedure TFormPrincipal.FormShow(Sender: TObject);
 begin
   MudarAba(ImgAba1);
-  CarregarCategorias(EdtPesquisarSenhas.Text);
+  //CarregarCategorias(EdtPesquisarSenhas.Text);
   //CarregarExplorar('','');
   //CarregarAgendamentos;
 end;
@@ -146,7 +150,40 @@ begin
 
     FormSenhas.Show;
   finally
-    FormSenhas.Free;
+    FormSenhas.DisposeOf;
+  end;
+end;
+
+procedure TFormPrincipal.BtnPesquisarClick(Sender: TObject);
+var
+  qry : TFDQuery;
+begin
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM SENHAS');
+    qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
+    qry.ParamByName('DESCRICAO').Value := '%';
+    qry.Open;
+
+    lvSenhas.BeginUpdate;
+    if qry.RecordCount > 0 then
+    begin
+      while not qry.eof do
+      begin
+        AddFiltrarSenhas();
+
+        qry.next;
+      end;
+    end;
+    lvSenhas.EndUpdate;
+
+  finally
+    qry.DisposeOf;
   end;
 end;
 
@@ -158,7 +195,7 @@ end;
 procedure TFormPrincipal.LbxCategoriasItemClick(const Sender: TCustomListBox;
   const Item: TListBoxItem);
 begin
-  CarregarExplorar(EdtPesquisarSenhas.Text, '', item.Tag);
+  //CarregarExplorar(EdtPesquisarSenhas.Text, '', item.Tag);
   MudarAba(ImgAba2);
 end;
 

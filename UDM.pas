@@ -25,7 +25,6 @@ type
     function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
 
     function SalvarSenhas(descricao, login, senha, favorito: String; tipo: integer; out erro: string): Boolean;
-    function FiltrarSenhas(descricao: String; out erro: string): Boolean;
     function ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
   end;
 
@@ -80,32 +79,6 @@ begin
     qry.SQL.Add('DELETE FROM SENHAS');
     qry.SQL.Add('WHERE ID_SENHA LIKE :ID_SENHA');
     qry.ParamByName('ID_SENHA').Value := id_senha;
-    qry.Open;
-
-    if qry.RecordCount > 0 then
-      Result := True;
-
-  finally
-    qry.DisposeOf;
-  end;
-end;
-
-function TDM.FiltrarSenhas(descricao: String): Boolean;
-var
-  qry : TFDQuery;
-begin
-  Result:= False;
-  erro := '';
-
-  try
-    qry := TFDQuery.Create(nil);
-    qry.Connection := DM.Conexao;
-
-    qry.Close;
-    qry.SQL.Clear;
-    qry.SQL.Add('SELECT * FROM SENHAS');
-    qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
-    qry.ParamByName('DESCRICAO').Value := '%'+descricao+'%';
     qry.Open;
 
     if qry.RecordCount > 0 then

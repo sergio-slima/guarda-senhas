@@ -34,6 +34,7 @@ type
     procedure ImgVerClick(Sender: TObject);
     procedure ImgNaoVerClick(Sender: TObject);
     procedure Image1Click(Sender: TObject);
+    procedure BtnExplorar_VoltarClick(Sender: TObject);
   private
     { Private declarations }
     procedure VerSenha;
@@ -48,6 +49,13 @@ implementation
 
 {$R *.fmx}
 
+uses UDM;
+
+procedure TFormSenhas.BtnExplorar_VoltarClick(Sender: TObject);
+begin
+  Close;
+end;
+
 procedure TFormSenhas.FormShow(Sender: TObject);
 begin
   ImgVer.Visible:=False;
@@ -56,7 +64,7 @@ end;
 
 procedure TFormSenhas.Image1Click(Sender: TObject);
 var
-  erro: string;
+  erro, favorito: string;
 begin
   if (EdtDescricao.Text = '') then
   begin
@@ -64,27 +72,32 @@ begin
     Exit;
   end;
 
-  if conta_status = 'N' then
+  if (EdtLogin.Text = '') or
+     (EdtSenha.Text = '') then
   begin
-    if not DM.CadastrarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
-    begin
-      ShowMessage(erro);
-      Exit;
-    end else
-    begin
-      ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
-      TabControl1.ActiveTab := TabLogin;
-    end;
-  end else if conta_status = 'A' then
-    if not DM.ResetarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
-    begin
-      ShowMessage(erro);
-      Exit;
-    end else
-    begin
-      ShowMessage('Senha resetada com sucesso. Faça o Login!');
-      TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
-    end;
+    ShowMessage('Digite o login e senha!');
+    Exit;
+  end;
+
+  if swFavorito.isChecked then
+    favorito = 'S'
+  else
+    favorito = 'N';
+
+  if not DM.SalvarSenhas(EdtDescricao.Text,
+                         EdtLogin.Text,
+                         EdtSenha.Text,
+                         favorito,
+                         erro) then
+  begin
+    ShowMessage(erro);
+    Exit;
+  end else
+  begin
+    ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
+    Close
+  end;
+
 end;
 
 procedure TFormSenhas.ImgNaoVerClick(Sender: TObject);
