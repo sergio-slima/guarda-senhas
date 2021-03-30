@@ -24,8 +24,9 @@ type
     function CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
     function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
 
-    function SalvarSenhas(descricao, senha, favorito: String; tipo: integer; out erro: string): Boolean;
+    function SalvarSenhas(descricao, login, senha, favorito: String; tipo: integer; out erro: string): Boolean;
     function FiltrarSenhas(descricao: String; out erro: string): Boolean;
+    function ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
   end;
 
 var
@@ -50,7 +51,7 @@ begin
    conexao.ExecSQL('CREATE TABLE IF NOT EXISTS usuarios (id_usuario INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, email VARCHAR(70) NOT NULL, nascimento DATE NOT NULL, senha VARCHAR(50) NOT NULL);');
 
    // table usuarios
-   conexao.ExecSQL('CREATE TABLE IF NOT EXISTS senhas (id_senha INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, descricao VARCHAR(50) NOT NULL, senha VARCHAR(50) NOT NULL, tipo INTEGER NOT NULL, favorito CHAR(1) NOT NULL);');
+   conexao.ExecSQL('CREATE TABLE IF NOT EXISTS senhas (id_senha INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, descricao VARCHAR(50) NOT NULL, login VARCHAR(100) NOT NULL, senha VARCHAR(50) NOT NULL, tipo INTEGER NOT NULL, favorito CHAR(1) NOT NULL);');
 
 
 //   if ValidaVersao('1.1') then
@@ -61,6 +62,32 @@ begin
    {$ENDIF}
 
    conexao.Connected := True;
+end;
+
+function TDM.ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
+var
+  qry : TFDQuery;
+begin
+  Result:= False;
+  erro := '';
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('DELETE FROM SENHAS');
+    qry.SQL.Add('WHERE ID_SENHA LIKE :ID_SENHA');
+    qry.ParamByName('ID_SENHA').Value := id_senha;
+    qry.Open;
+
+    if qry.RecordCount > 0 then
+      Result := True;
+
+  finally
+    qry.DisposeOf;
+  end;
 end;
 
 function TDM.FiltrarSenhas(descricao: String): Boolean;
@@ -191,7 +218,7 @@ begin
   end;
 end;
 
-function TDM.SalvarSenhas(descricao, senha, favorito: String; tipo: integer;
+function TDM.SalvarSenhas(descricao, login, senha, favorito: String; tipo: integer;
   out erro: string): Boolean;
 var
   qry : TFDQuery;
@@ -205,9 +232,10 @@ begin
 
     qry.Close;
     qry.SQL.Clear;
-    qry.SQL.Add('INSERT INTO SENHAS (DESCRICAO, SENHA, FAVORITO, TIPO)');
-    qry.SQL.Add('VALUES (:DESCRICAO, :SENHA, :FAVORITO, :TIPO)');
+    qry.SQL.Add('INSERT INTO SENHAS (DESCRICAO, LOGIN, SENHA, FAVORITO, TIPO)');
+    qry.SQL.Add('VALUES (:DESCRICAO, :LOGIN, :SENHA, :FAVORITO, :TIPO)');
     qry.ParamByName('DESCRICAO').Value := descricao;
+    qry.ParamByName('LOGIN').Value := login;
     qry.ParamByName('SENHA').Value := senha;
     qry.ParamByName('FAVORITO').Value := favorito;
     qry.ParamByName('TIPO').Value := tipo;

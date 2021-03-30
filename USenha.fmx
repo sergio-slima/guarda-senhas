@@ -2,23 +2,24 @@ object FormSenhas: TFormSenhas
   Left = 0
   Top = 0
   Caption = 'Senhas'
-  ClientHeight = 480
-  ClientWidth = 344
+  ClientHeight = 512
+  ClientWidth = 361
   Fill.Kind = Solid
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
+  OnShow = FormShow
   DesignerMasterStyle = 0
   object Layout3: TLayout
     Align = Top
-    Size.Width = 344.000000000000000000
+    Size.Width = 361.000000000000000000
     Size.Height = 49.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
     object Label1: TLabel
       Align = Contents
       StyledSettings = [Family]
-      Size.Width = 344.000000000000000000
+      Size.Width = 361.000000000000000000
       Size.Height = 49.000000000000000000
       Size.PlatformDefault = False
       TextSettings.Font.Size = 18.000000000000000000
@@ -29,66 +30,6 @@ object FormSenhas: TFormSenhas
       TabOrder = 0
     end
     object BtnExplorar_Voltar: TImage
-      MultiResBitmap.Height = 64
-      MultiResBitmap.Width = 64
-      MultiResBitmap = <
-        item
-          Width = 64
-          Height = 64
-          PNG = {
-            89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
-            DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-            03CC49444154785EEDD84B685C551807F073BE73EF4D93CC454C437DED44DC74
-            D12E2A42111F0B5B2489CED44AC874223EA20B1FA888282A82A8A02058A10B95
-            2E7C642652A5BD3833AD2D82484D565928CEA66B1F69E983DA246366E63C3C27
-            FD281D324967261399733DBFCD3DFF933B30F34F72EF7787388EE3388EE3388E
-            E3FC1F513C76DC23A54341CFA5EB5E568A6E254A7D99BD6BF709FC5157D99002
-            F6CECCF4964B73670551FDB845FC84F74E219D7C0B63D7003C76CC133F47E1E2
-            6F7317AEFEF086E4B5C770D9553A5A40FA64E1FABF4E89F392AA4DB87585AACA
-            3E5C76958E1590993EBEE54CA9725609E5E396153A52C0A3333FDC72EED70BA7
-            3DA6186E5963DD050C65A37D674A17FF509EBF6177948DB4AE028672D1537C91
-            4F62B452DB053C3815BDC017F86718ADD55601C353D11B9579BE1FA3D55A2E60
-            3817BD5F9BE7EF62B45E4B058C4C1D39505BE0AF628C85A60B18C91DFEA23A2F
-            9EC5181B4DDDBA4672D1B7D505FE30C6B60849ABBD212DEA87A38080EA91027C
-            A0C427527902884795F28052208A302524E88982E90378C081086FC5FB944C4A
-            202085D44B266B44D18A24B0E401B948A83CAD4FF93E9FDE73E8F2D9ABBB6601
-            23D9E8787591EFC2681550748985EC75FD10F6116EADB06601C393D174ADCC77
-            62B4961F7AFB0B63C99730D659B580E1C923BFD4CA621B46EB79BDECEEE278EA
-            24C62B1A5E043333279E8BD3873728530DBF8B68588020640297B1A196E8565C
-            D66958807EA453B88CBD8605E80BC3A7B88C8F80947055A761015FEDDCF589DF
-            07B318634112F1362EEB342CC02864F6DCC17ABD9F305A2DE8F73E3C96D93B8D
-            B1CEAA051847C793F7FA7DAC88D13AC217E5208467F2FB92AFE0D60AD79C040D
-            3D0D7EADA7C1518C6D118A563785709812EA4B427A40914011E9EBDF81A788F2
-            F55597513D162F1FA9D2A3B11E94F59ACBCBEF1140524A80EAD7283D042F5FA4
-            F586D0E70A507A14065AD1F7BA7FF41FFB250A302739395A1C4F7E67CE5B4B53
-            051843B9E8205FE04F626C1980387F6C62741063D758F35FE06AC57472C24FB0
-            8F31C646D305188574EAC520C1DEC3180B2D1560E4D3A9378390BD86D17A2D17
-            60E4C7521F04A1FF3C46ABB55580911F7BE840D0C71EC768ADB60B30F299D4E7
-            4102469BBF97749F75156098AF9D066FEFBF99839E362DB4EE028CEC3D0FCC6D
-            D9BEF906CA38C72D6B74A400636AC77DE7C26D9B07CDC4875B56E85801C6373B
-            EEFFFBC63B13038A523D92D6A3019471D9553A5A8031B97DF7E24DB70D0CC840
-            CCE3D632F0FD83B8EC2A1B76FD7E7A76D6FFF3D4EF3F928ABA157A20BBD61399
-            E3388EE3388EE3388EF39F22E45FDEA8322676318DAA0000000049454E44AE42
-            6082}
-          FileName = 'D:\Sergio\Projetos\guarda-senhas\img\back.png'
-        end>
-      Align = Left
-      Margins.Left = 10.000000000000000000
-      Position.X = 10.000000000000000000
-      Size.Width = 23.000000000000000000
-      Size.Height = 48.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object Line2: TLine
-      Align = Bottom
-      LineType = Diagonal
-      Position.Y = 48.000000000000000000
-      Size.Width = 344.000000000000000000
-      Size.Height = 1.000000000000000000
-      Size.PlatformDefault = False
-      Stroke.Color = xFFE0E0E0
-    end
-    object Image1: TImage
       MultiResBitmap.Height = 64
       MultiResBitmap.Width = 64
       MultiResBitmap = <
@@ -132,12 +73,57 @@ object FormSenhas: TFormSenhas
             44AE426082}
           FileName = 'D:\Sergio\Projetos\guarda-senhas\img\back.png'
         end>
-      Align = Right
-      Margins.Right = 10.000000000000000000
-      Position.X = 311.000000000000000000
-      Size.Width = 23.000000000000000000
+      Align = Left
+      Margins.Left = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Size.Width = 35.000000000000000000
       Size.Height = 48.000000000000000000
       Size.PlatformDefault = False
+    end
+    object Line2: TLine
+      Align = Bottom
+      LineType = Diagonal
+      Position.Y = 48.000000000000000000
+      Size.Width = 361.000000000000000000
+      Size.Height = 1.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = xFFE0E0E0
+    end
+    object Image1: TImage
+      MultiResBitmap.Height = 64
+      MultiResBitmap.Width = 64
+      MultiResBitmap = <
+        item
+          Width = 64
+          Height = 64
+          PNG = {
+            89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
+            DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            01EA49444154785EEDD73F2F435118C7F1924A8C6C44BC8A0E128B41C4C06831
+            5A0C369B4D18BB182406BBCD66128D1720E93BB089588841C4705BE4D73C575A
+            BDF7DC73CE3D7F9EC3F3597AEF767EDFBADA36841042082184F89F26E83579EB
+            E7975F7439F0D9CBFA377BDB4DBA2DF52702FC1E3FEC7A774BB931F900AAF139
+            5584A403E88CCF9545483680C9F85C5184497A4D8ACDF832C905A8337EE3EC62
+            962E7F24F508D47DE7937E045CFED90F4B22808BF1BD97E7365D8E60FF08B818
+            DF7F7FEB74F677D6E87604EB00BEC703DB0021C603CB00A1C603BB0021C703AB
+            00A1C7835680A28355FDCC3415633C548E501DCC558458E3413940E7607523C4
+            1C0FA5873739986D84D8E3A1F0E03607338DC0613C38FB2D603288CB78180BD0
+            6AB5A6E8D298CE304EE3612C40B7DBCDE8D28A6A20B7F1E0E5E770D1508EE3A1
+            30C0C7D3C3325D5A1B1ECC753C94FEE75E3D3EDD6CCECD5FD16D54BEC683F2A3
+            8B43049FE3A1F2B33B6604DFE341EBCB4B8C0821C683F6B7B79011428D07ED00
+            102242C8F16014007C46083D1E8C03808F0831C6835500701921D678B00E002E
+            22C41C0FB502409D08B1C743ED00601381C3787012004C2270190FCE02804E04
+            4EE3C169005045E0361E9C078095C39399E985C557BA1DC81EEF976E8F0EEEE8
+            560821841042081153A3F10D623A5320407C68C90000000049454E44AE426082}
+          FileName = 'D:\Sergio\Projetos\guarda-senhas\img\ok.png'
+        end>
+      Align = Right
+      Margins.Right = 10.000000000000000000
+      Position.X = 316.000000000000000000
+      Size.Width = 35.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      OnClick = Image1Click
     end
   end
   object Layout1: TLayout
@@ -146,8 +132,8 @@ object FormSenhas: TFormSenhas
     Margins.Top = 10.000000000000000000
     Margins.Right = 10.000000000000000000
     Margins.Bottom = 10.000000000000000000
-    Size.Width = 324.000000000000000000
-    Size.Height = 411.000000000000000000
+    Size.Width = 341.000000000000000000
+    Size.Height = 443.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
     object Rectangle7: TRectangle
@@ -155,7 +141,7 @@ object FormSenhas: TFormSenhas
       Fill.Color = xFFE9E9E9
       Margins.Top = 10.000000000000000000
       Position.Y = 10.000000000000000000
-      Size.Width = 324.000000000000000000
+      Size.Width = 341.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       Stroke.Kind = None
@@ -166,13 +152,13 @@ object FormSenhas: TFormSenhas
         Align = Client
         StyleLookup = 'transparentedit'
         TabOrder = 0
-        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.Font.Size = 16.000000000000000000
         TextSettings.FontColor = xFFA0A0A0
         Margins.Left = 15.000000000000000000
         Margins.Top = 5.000000000000000000
         Margins.Right = 15.000000000000000000
         Margins.Bottom = 5.000000000000000000
-        Size.Width = 294.000000000000000000
+        Size.Width = 311.000000000000000000
         Size.Height = 31.000000000000000000
         Size.PlatformDefault = False
         TextPrompt = 'Descri'#231#227'o'
@@ -182,15 +168,15 @@ object FormSenhas: TFormSenhas
     object Layout2: TLayout
       Align = Top
       Margins.Top = 10.000000000000000000
-      Position.Y = 61.000000000000000000
-      Size.Width = 324.000000000000000000
+      Position.Y = 112.000000000000000000
+      Size.Width = 341.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       object Rectangle1: TRectangle
         Align = Scale
         Fill.Color = xFFE9E9E9
-        Size.Width = 262.220428466796900000
+        Size.Width = 275.978088378906300000
         Size.Height = 41.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
@@ -201,20 +187,21 @@ object FormSenhas: TFormSenhas
           Align = Client
           StyleLookup = 'transparentedit'
           TabOrder = 0
-          TextSettings.Font.Size = 14.000000000000000000
+          Password = True
+          TextSettings.Font.Size = 16.000000000000000000
           TextSettings.FontColor = xFFA0A0A0
           Margins.Left = 15.000000000000000000
           Margins.Top = 5.000000000000000000
           Margins.Right = 15.000000000000000000
           Margins.Bottom = 5.000000000000000000
-          Size.Width = 232.220428466796900000
+          Size.Width = 245.978088378906300000
           Size.Height = 31.000000000000000000
           Size.PlatformDefault = False
           TextPrompt = 'Senha'
           StyledSettings = [Family, Style]
         end
       end
-      object Image2: TImage
+      object ImgNaoVer: TImage
         MultiResBitmap.Height = 64
         MultiResBitmap.Width = 64
         MultiResBitmap = <
@@ -277,12 +264,13 @@ object FormSenhas: TFormSenhas
         Align = Right
         Opacity = 0.699999988079071000
         Margins.Right = 10.000000000000000000
-        Position.X = 252.000000000000000000
+        Position.X = 269.000000000000000000
         Size.Width = 26.000000000000000000
         Size.Height = 41.000000000000000000
         Size.PlatformDefault = False
+        OnClick = ImgNaoVerClick
       end
-      object Image3: TImage
+      object ImgVer: TImage
         MultiResBitmap.Height = 64
         MultiResBitmap.Width = 64
         MultiResBitmap = <
@@ -337,74 +325,114 @@ object FormSenhas: TFormSenhas
         Align = Right
         Opacity = 0.699999988079071000
         Margins.Right = 10.000000000000000000
-        Position.X = 288.000000000000000000
+        Position.X = 305.000000000000000000
         Size.Width = 26.000000000000000000
         Size.Height = 41.000000000000000000
         Size.PlatformDefault = False
+        OnClick = ImgVerClick
       end
     end
     object Layout4: TLayout
       Align = Top
       Margins.Top = 10.000000000000000000
-      Position.Y = 112.000000000000000000
-      Size.Width = 324.000000000000000000
+      Position.Y = 163.000000000000000000
+      Size.Width = 341.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       object Rectangle2: TRectangle
-        Align = Left
+        Align = Scale
         Fill.Color = xFFE9E9E9
-        Size.Width = 153.000000000000000000
+        Size.Width = 163.040847778320300000
         Size.Height = 41.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         XRadius = 5.000000000000000000
         YRadius = 5.000000000000000000
-        object Edit1: TEdit
+        object EdtTipo: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Align = Client
           StyleLookup = 'transparentedit'
           TabOrder = 0
-          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.Size = 16.000000000000000000
           TextSettings.FontColor = xFFA0A0A0
           Margins.Left = 15.000000000000000000
           Margins.Top = 5.000000000000000000
           Margins.Right = 15.000000000000000000
           Margins.Bottom = 5.000000000000000000
-          Size.Width = 123.000000000000000000
+          Size.Width = 133.040847778320300000
           Size.Height = 31.000000000000000000
           Size.PlatformDefault = False
-          TextPrompt = 'Descri'#231#227'o'
+          TextPrompt = 'Tipo'
           StyledSettings = [Family, Style]
         end
       end
       object Rectangle3: TRectangle
-        Align = Right
+        Align = Scale
         Fill.Color = xFFE9E9E9
-        Position.X = 171.000000000000000000
-        Size.Width = 153.000000000000000000
+        Position.X = 177.959243774414100000
+        Size.Width = 163.041366577148400000
         Size.Height = 41.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         XRadius = 5.000000000000000000
         YRadius = 5.000000000000000000
-        object Edit2: TEdit
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
+        object Label2: TLabel
           Align = Client
-          StyleLookup = 'transparentedit'
-          TabOrder = 0
-          TextSettings.Font.Size = 14.000000000000000000
-          TextSettings.FontColor = xFFA0A0A0
-          Margins.Left = 15.000000000000000000
-          Margins.Top = 5.000000000000000000
-          Margins.Right = 15.000000000000000000
-          Margins.Bottom = 5.000000000000000000
-          Size.Width = 123.000000000000000000
-          Size.Height = 31.000000000000000000
-          Size.PlatformDefault = False
-          TextPrompt = 'Descri'#231#227'o'
           StyledSettings = [Family, Style]
+          Margins.Left = 5.000000000000000000
+          Size.Width = 88.041366577148440000
+          Size.Height = 41.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 16.000000000000000000
+          TextSettings.FontColor = xFF848484
+          TextSettings.HorzAlign = Center
+          Text = 'Favorito'
+          TabOrder = 0
         end
+        object swFavorito: TSwitch
+          Align = Right
+          IsChecked = False
+          Margins.Left = 5.000000000000000000
+          Margins.Top = 7.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 7.000000000000000000
+          Position.X = 98.041366577148440000
+          Position.Y = 7.000000000000000000
+          Size.Width = 60.000000000000000000
+          Size.Height = 27.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+        end
+      end
+    end
+    object Rectangle4: TRectangle
+      Align = Top
+      Fill.Color = xFFE9E9E9
+      Margins.Top = 10.000000000000000000
+      Position.Y = 61.000000000000000000
+      Size.Width = 341.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
+      XRadius = 5.000000000000000000
+      YRadius = 5.000000000000000000
+      object EdtLogin: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Client
+        StyleLookup = 'transparentedit'
+        TabOrder = 0
+        TextSettings.Font.Size = 16.000000000000000000
+        TextSettings.FontColor = xFFA0A0A0
+        Margins.Left = 15.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Size.Width = 311.000000000000000000
+        Size.Height = 31.000000000000000000
+        Size.PlatformDefault = False
+        TextPrompt = 'Login'
+        StyledSettings = [Family, Style]
       end
     end
   end

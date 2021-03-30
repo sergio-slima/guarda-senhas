@@ -111,6 +111,7 @@ begin
       TabControl1.ActiveTab := TabLogin;
     end;
   end else if conta_status = 'A' then
+  begin
     if not DM.ResetarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
     begin
       ShowMessage(erro);
@@ -120,6 +121,7 @@ begin
       ShowMessage('Senha resetada com sucesso. Faça o Login!');
       TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
     end;
+  end;
 end;
 
 procedure TFormLogin.FormCreate(Sender: TObject);

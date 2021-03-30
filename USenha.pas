@@ -20,15 +20,23 @@ type
     Rectangle1: TRectangle;
     EdtSenha: TEdit;
     Layout2: TLayout;
-    Image2: TImage;
-    Image3: TImage;
+    ImgNaoVer: TImage;
+    ImgVer: TImage;
     Rectangle2: TRectangle;
-    Edit1: TEdit;
+    EdtTipo: TEdit;
     Layout4: TLayout;
     Rectangle3: TRectangle;
-    Edit2: TEdit;
+    Label2: TLabel;
+    swFavorito: TSwitch;
+    Rectangle4: TRectangle;
+    EdtLogin: TEdit;
+    procedure FormShow(Sender: TObject);
+    procedure ImgVerClick(Sender: TObject);
+    procedure ImgNaoVerClick(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
   private
     { Private declarations }
+    procedure VerSenha;
   public
     { Public declarations }
   end;
@@ -39,5 +47,69 @@ var
 implementation
 
 {$R *.fmx}
+
+procedure TFormSenhas.FormShow(Sender: TObject);
+begin
+  ImgVer.Visible:=False;
+  ImgNaoVer.Visible:=True;
+end;
+
+procedure TFormSenhas.Image1Click(Sender: TObject);
+var
+  erro: string;
+begin
+  if (EdtDescricao.Text = '') then
+  begin
+    ShowMessage('Digite uma descrição!');
+    Exit;
+  end;
+
+  if conta_status = 'N' then
+  begin
+    if not DM.CadastrarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
+    begin
+      ShowMessage(erro);
+      Exit;
+    end else
+    begin
+      ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
+      TabControl1.ActiveTab := TabLogin;
+    end;
+  end else if conta_status = 'A' then
+    if not DM.ResetarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
+    begin
+      ShowMessage(erro);
+      Exit;
+    end else
+    begin
+      ShowMessage('Senha resetada com sucesso. Faça o Login!');
+      TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
+    end;
+end;
+
+procedure TFormSenhas.ImgNaoVerClick(Sender: TObject);
+begin
+  VerSenha;
+end;
+
+procedure TFormSenhas.ImgVerClick(Sender: TObject);
+begin
+  VerSenha;
+end;
+
+procedure TFormSenhas.VerSenha;
+begin
+  if EdtSenha.Password = True then
+  begin
+    EdtSenha.Password:=False;
+    ImgNaoVer.Visible:=False;
+    ImgVer.Visible:=True;
+  end else
+  begin
+    EdtSenha.Password:=True;
+    ImgVer.Visible:=False;
+    ImgNaoVer.Visible:=True;
+  end;
+end;
 
 end.
