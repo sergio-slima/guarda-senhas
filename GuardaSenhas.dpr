@@ -3,7 +3,7 @@ program GuardaSenhas;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  USenha in 'USenha.pas' {FormSenhas},
+  UTipo in 'UTipo.pas' {FormTipos},
   UDM in 'UDM.pas' {DM: TDataModule},
   UInicial in 'UInicial.pas' {FormInicial},
   ULogin in 'ULogin.pas' {FormLogin},

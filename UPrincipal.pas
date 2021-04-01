@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client;
+  FireDAC.Comp.Client, System.Actions, FMX.ActnList;
 
 type
   TFormPrincipal = class(TForm)
@@ -24,7 +24,6 @@ type
     TabAba1: TTabItem;
     TabAba2: TTabItem;
     TabAba3: TTabItem;
-    TabAba4: TTabItem;
     Layout4: TLayout;
     Image5: TImage;
     Layout2: TLayout;
@@ -33,47 +32,61 @@ type
     BtnPesquisar: TImage;
     Layout3: TLayout;
     Label1: TLabel;
-    BtnExplorar_Voltar: TImage;
+    BtnHome: TImage;
     Layout6: TLayout;
     Rectangle1: TRectangle;
     Edit1: TEdit;
     lvExplorar: TListView;
-    Layout7: TLayout;
-    Label5: TLabel;
-    LbxAgendamentos: TListBox;
-    Layout8: TLayout;
-    Label6: TLabel;
-    Layout9: TLayout;
-    Rectangle4: TRectangle;
-    EdtPerfil_Nome: TEdit;
-    BtnPerfilSalvar: TRectangle;
-    Label7: TLabel;
-    Rectangle7: TRectangle;
-    EdtPerfil_Email: TEdit;
-    BtnPerfilSenha: TRectangle;
-    Label8: TLabel;
     Line1: TLine;
     Line2: TLine;
-    Line3: TLine;
-    Line4: TLine;
-    ImgSem_Reserva: TImage;
     Image1: TImage;
-    Image2: TImage;
+    BtnNovo: TImage;
     Layout5: TLayout;
     BannerAd1: TBannerAd;
-    FDQuery1: TFDQuery;
     lvSenhas: TListView;
+    BtnFavorito: TImage;
+    ActionList1: TActionList;
+    ActTab01: TChangeTabAction;
+    ActTab02: TChangeTabAction;
+    Layout7: TLayout;
+    Rectangle7: TRectangle;
+    EdtDescricao: TEdit;
+    Layout8: TLayout;
+    Rectangle2: TRectangle;
+    EdtSenha: TEdit;
+    ImgNaoVer: TImage;
+    ImgVer: TImage;
+    Layout9: TLayout;
+    Rectangle3: TRectangle;
+    EdtTipo: TEdit;
+    Rectangle4: TRectangle;
+    Label2: TLabel;
+    swFavorito: TSwitch;
+    Rectangle5: TRectangle;
+    EdtLogin: TEdit;
+    Layout10: TLayout;
+    Label3: TLabel;
+    BtnVoltar: TImage;
+    Line3: TLine;
+    BtnSalvar: TImage;
+    ActTab03: TChangeTabAction;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure BtnExplorar_VoltarClick(Sender: TObject);
     procedure EdtPesquisarSenhasExit(Sender: TObject);
     procedure LbxCategoriasItemClick(const Sender: TCustomListBox;
       const Item: TListBoxItem);
-    procedure Image2Click(Sender: TObject);
     procedure BtnPesquisarClick(Sender: TObject);
+    procedure BtnVoltarClick(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure BtnNovoClick(Sender: TObject);
+    procedure ImgNaoVerClick(Sender: TObject);
+    procedure ImgVerClick(Sender: TObject);
+    procedure BtnFavoritoClick(Sender: TObject);
+    procedure BtnHomeClick(Sender: TObject);
   private
     procedure MudarAba(img: TImage);
+    procedure VerSenha;
     procedure AddFiltrarSenhas(id_senha, descricao, login, senha, favorito: String; id_categoria: integer);
     { Private declarations }
   public
@@ -81,7 +94,6 @@ type
     id_categoria_global : integer;
     id_usuario_global : integer;
     ind_fechar_telas : boolean;
-    procedure CarregarAgendamentos;
   end;
 
 var
@@ -91,7 +103,7 @@ implementation
 
 {$R *.fmx}
 
-uses UDM, USenha;
+uses UDM, UTipo;
 
 procedure TFormPrincipal.MudarAba(img: TImage);
 begin
@@ -103,25 +115,28 @@ begin
   img.Opacity := 1;
   TabControl.GotoVisibleTab(img.Tag, TTabTransition.Slide);
 
-  // Aba de agendamentos confirmados
-  if img.Tag = 2 then
-    CarregarAgendamentos;
 
+end;
+
+procedure TFormPrincipal.VerSenha;
+begin
+  if EdtSenha.Password = True then
+  begin
+    EdtSenha.Password:=False;
+    ImgNaoVer.Visible:=False;
+    ImgVer.Visible:=True;
+  end else
+  begin
+    EdtSenha.Password:=True;
+    ImgVer.Visible:=False;
+    ImgNaoVer.Visible:=True;
+  end;
 end;
 
 procedure TFormPrincipal.AddFiltrarSenhas(id_senha, descricao, login, senha,
   favorito: String; id_categoria: integer);
 begin
 /////////
-end;
-
-procedure TFormPrincipal.BtnExplorar_VoltarClick(Sender: TObject);
-begin
-  MudarAba(ImgAba1);
-end;
-
-procedure TFormPrincipal.CarregarAgendamentos;
-begin
 end;
 
 procedure TFormPrincipal.EdtPesquisarSenhasExit(Sender: TObject);
@@ -136,22 +151,17 @@ end;
 
 procedure TFormPrincipal.FormShow(Sender: TObject);
 begin
-  MudarAba(ImgAba1);
+  ActTab01.Execute;
   //CarregarCategorias(EdtPesquisarSenhas.Text);
   //CarregarExplorar('','');
   //CarregarAgendamentos;
 end;
 
-procedure TFormPrincipal.Image2Click(Sender: TObject);
+procedure TFormPrincipal.BtnNovoClick(Sender: TObject);
 begin
-  try
-    if not Assigned(FormSenhas) then
-      Application.CreateForm(TFormSenhas, FormSenhas);
-
-    FormSenhas.Show;
-  finally
-    FormSenhas.DisposeOf;
-  end;
+  ImgVer.Visible:=False;
+  ImgNaoVer.Visible:=True;
+  ActTab03.Execute;
 end;
 
 procedure TFormPrincipal.BtnPesquisarClick(Sender: TObject);
@@ -187,9 +197,72 @@ begin
   end;
 end;
 
+procedure TFormPrincipal.BtnSalvarClick(Sender: TObject);
+var
+  erro, favorito: string;
+begin
+  if (EdtDescricao.Text = '') then
+  begin
+    ShowMessage('Digite uma descrição!');
+    Exit;
+  end;
+
+  if (EdtLogin.Text = '') or
+     (EdtSenha.Text = '') then
+  begin
+    ShowMessage('Digite o login e senha!');
+    Exit;
+  end;
+
+  if swFavorito.isChecked then
+    favorito = 'S'
+  else
+    favorito = 'N';
+
+  if not DM.SalvarSenhas(EdtDescricao.Text,
+                         EdtLogin.Text,
+                         EdtSenha.Text,
+                         favorito,
+                         erro) then
+  begin
+    ShowMessage(erro);
+    Exit;
+  end else
+  begin
+    ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
+    Close
+  end;
+
+end;
+
+procedure TFormPrincipal.BtnVoltarClick(Sender: TObject);
+begin
+  ActTab01.Execute;
+end;
+
+procedure TFormPrincipal.BtnFavoritoClick(Sender: TObject);
+begin
+  ActTab02.Execute;
+end;
+
+procedure TFormPrincipal.BtnHomeClick(Sender: TObject);
+begin
+  ActTab01.Execute;
+end;
+
 procedure TFormPrincipal.ImgAba4Click(Sender: TObject);
 begin
   MudarAba(TImage(Sender));
+end;
+
+procedure TFormPrincipal.ImgNaoVerClick(Sender: TObject);
+begin
+  VerSenha;
+end;
+
+procedure TFormPrincipal.ImgVerClick(Sender: TObject);
+begin
+  VerSenha;
 end;
 
 procedure TFormPrincipal.LbxCategoriasItemClick(const Sender: TCustomListBox;
