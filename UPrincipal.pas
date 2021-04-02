@@ -70,6 +70,8 @@ type
     Line3: TLine;
     BtnSalvar: TImage;
     ActTab03: TChangeTabAction;
+    ImgExcluir: TImage;
+    Image2: TImage;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -84,10 +86,13 @@ type
     procedure ImgVerClick(Sender: TObject);
     procedure BtnFavoritoClick(Sender: TObject);
     procedure BtnHomeClick(Sender: TObject);
+    procedure lvSenhasUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
   private
     procedure MudarAba(img: TImage);
     procedure VerSenha;
-    procedure AddFiltrarSenhas(id_senha, descricao, login, senha, favorito: String; id_categoria: integer);
+    procedure ListarSenhas(descricao: string; clear: boolean);
+    procedure AddSenhas(id_senha, descricao, login, senha, favorito: String; id_categoria: integer);
     { Private declarations }
   public
     { Public declarations }
@@ -133,10 +138,47 @@ begin
   end;
 end;
 
-procedure TFormPrincipal.AddFiltrarSenhas(id_senha, descricao, login, senha,
+procedure TFormPrincipal.AddSenhas(id_senha, descricao, login, senha,
   favorito: String; id_categoria: integer);
+var
+  item : TListViewItem;
+  txt : TListItemText;
+  img : TListItemImage;
 begin
-/////////
+  try
+    item := lvSenhas.Items.Add;
+    with item do
+    begin
+
+      Detail := id_senha;
+
+      // Descricao
+      txt := TListItemText(Objects.FindDrawable('TxtDescricao'));
+      txt.Text := descricao;
+
+       // Login
+      txt := TListItemText(Objects.FindDrawable('TxtLogin'));
+      txt.Text := login;
+
+       // Imagem Tipo
+      img := TListItemImage(Objects.FindDrawable('ImageTipo'));
+      if lancado = 'S' then
+        img.Bitmap := ImgContas.Bitmap
+      else
+        img.Bitmap := ImgLancarContas.Bitmap;
+
+       // Imagem Ver
+      img := TListItemImage(Objects.FindDrawable('ImageVer'));
+      img.Bitmap := ImgSituacao2.Bitmap;
+
+       // Imagem Ver
+      img := TListItemImage(Objects.FindDrawable('ImageExcluir'));
+      img.Bitmap := ImgExcluir.Bitmap;
+
+    end;
+  except on ex:Exception do
+    fancy.Show(TIconDialog.Error, 'Erro', 'Erro ao adicionar planos: '+ex.message, 'OK');
+  end;
 end;
 
 procedure TFormPrincipal.EdtPesquisarSenhasExit(Sender: TObject);
@@ -165,36 +207,8 @@ begin
 end;
 
 procedure TFormPrincipal.BtnPesquisarClick(Sender: TObject);
-var
-  qry : TFDQuery;
 begin
-
-  try
-    qry := TFDQuery.Create(nil);
-    qry.Connection := DM.Conexao;
-
-    qry.Close;
-    qry.SQL.Clear;
-    qry.SQL.Add('SELECT * FROM SENHAS');
-    qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
-    qry.ParamByName('DESCRICAO').Value := '%';
-    qry.Open;
-
-    lvSenhas.BeginUpdate;
-    if qry.RecordCount > 0 then
-    begin
-      while not qry.eof do
-      begin
-        AddFiltrarSenhas();
-
-        qry.next;
-      end;
-    end;
-    lvSenhas.EndUpdate;
-
-  finally
-    qry.DisposeOf;
-  end;
+  ListarSenhas(EdtPesquisarSenhas.Text, True);
 end;
 
 procedure TFormPrincipal.BtnSalvarClick(Sender: TObject);
@@ -270,6 +284,59 @@ procedure TFormPrincipal.LbxCategoriasItemClick(const Sender: TCustomListBox;
 begin
   //CarregarExplorar(EdtPesquisarSenhas.Text, '', item.Tag);
   MudarAba(ImgAba2);
+end;
+
+procedure TFormPrincipal.ListarSenhas(descricao: string; clear: boolean);
+var
+  qry : TFDQuery;
+begin
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM SENHAS');
+    qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
+    qry.ParamByName('DESCRICAO').Value := '%';
+    qry.Open;
+
+    if clear = true then
+      lvSenhas.Items.Clear;
+
+    lvSenhas.BeginUpdate;
+    if qry.RecordCount > 0 then
+    begin
+      while not qry.eof do
+      begin
+        AddSenhas(qry.FieldByName('id_senha').AsInteger,
+                  qry.FieldByName('descricao').AsString,
+                  qry.FieldByName('login').AsString,
+                  qry.FieldByName('senha').AsString,
+                  qry.FieldByName('favorito').AsString,
+                  qry.FieldByName('tipo').AsInteger);
+
+        qry.next;
+      end;
+    end;
+    lvSenhas.EndUpdate;
+
+  finally
+    qry.DisposeOf;
+  end;
+end;
+
+procedure TFormPrincipal.lvSenhasUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+var
+  txt : TListItemText;
+begin
+  txt := TListItemText(AItem.Objects.FindDrawable('TxtDescricao'));
+  txt.Width:= lvSenhas.Width - 100;
+
+  txt := TListItemText(AItem.Objects.FindDrawable('TxtLogin'));
+  txt.Width:= lvSenhas.Width - 100;
 end;
 
 end.
