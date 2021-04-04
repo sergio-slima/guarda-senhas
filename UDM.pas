@@ -24,7 +24,7 @@ type
     function CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
     function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
 
-    function SalvarSenhas(descricao, login, senha, favorito: String; tipo: integer; out erro: string): Boolean;
+    function SalvarSenhas(descricao, login, senha, favorito, tipo: String; out erro: string): Boolean;
     function ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
   end;
 
@@ -49,8 +49,8 @@ begin
    // table usuarios
    conexao.ExecSQL('CREATE TABLE IF NOT EXISTS usuarios (id_usuario INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, email VARCHAR(70) NOT NULL, nascimento DATE NOT NULL, senha VARCHAR(50) NOT NULL);');
 
-   // table usuarios
-   conexao.ExecSQL('CREATE TABLE IF NOT EXISTS senhas (id_senha INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, descricao VARCHAR(50) NOT NULL, login VARCHAR(100) NOT NULL, senha VARCHAR(50) NOT NULL, tipo INTEGER NOT NULL, favorito CHAR(1) NOT NULL);');
+   // table senhas
+   conexao.ExecSQL('CREATE TABLE IF NOT EXISTS senhas (id_senha INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, descricao VARCHAR(50) NOT NULL, login VARCHAR(100) NOT NULL, senha VARCHAR(50) NOT NULL, tipo VARCHAR(2) NOT NULL, favorito CHAR(1) NOT NULL);');
 
 
 //   if ValidaVersao('1.1') then
@@ -191,7 +191,7 @@ begin
   end;
 end;
 
-function TDM.SalvarSenhas(descricao, login, senha, favorito: String; tipo: integer;
+function TDM.SalvarSenhas(descricao, login, senha, favorito, tipo: String;
   out erro: string): Boolean;
 var
   qry : TFDQuery;

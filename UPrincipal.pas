@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, System.Actions, FMX.ActnList;
+  FireDAC.Comp.Client, System.Actions, FMX.ActnList, uFancyDialog;
 
 type
   TFormPrincipal = class(TForm)
@@ -57,7 +57,7 @@ type
     ImgNaoVer: TImage;
     ImgVer: TImage;
     Layout9: TLayout;
-    Rectangle3: TRectangle;
+    RtgTpo: TRectangle;
     EdtTipo: TEdit;
     Rectangle4: TRectangle;
     Label2: TLabel;
@@ -71,7 +71,7 @@ type
     BtnSalvar: TImage;
     ActTab03: TChangeTabAction;
     ImgExcluir: TImage;
-    Image2: TImage;
+    ImgVerSenha: TImage;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -88,17 +88,25 @@ type
     procedure BtnHomeClick(Sender: TObject);
     procedure lvSenhasUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
+    procedure RtgTpoClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
   private
+    fancy : TFancyDialog;
+
     procedure MudarAba(img: TImage);
     procedure VerSenha;
     procedure ListarSenhas(descricao: string; clear: boolean);
-    procedure AddSenhas(id_senha, descricao, login, senha, favorito: String; id_categoria: integer);
+    procedure AddSenhas(id_senha, descricao, login, senha, favorito, tipo: String);
     { Private declarations }
   public
     { Public declarations }
     id_categoria_global : integer;
     id_usuario_global : integer;
     ind_fechar_telas : boolean;
+
+    CodTipo_Selecao : String;
+    NomTipo_Selecao : String;
   end;
 
 var
@@ -123,6 +131,18 @@ begin
 
 end;
 
+procedure TFormPrincipal.RtgTpoClick(Sender: TObject);
+begin
+  if not Assigned(FormTipos) then
+    Application.CreateForm(TFormTipos, FormTipos);
+
+  FormTipos.ShowModal(procedure(ModalResult: TModalResult)
+                             begin
+                               if CodTipo_Selecao <> '' then
+                                 EdtTipo.Text := NomTipo_Selecao;
+                             end);
+end;
+
 procedure TFormPrincipal.VerSenha;
 begin
   if EdtSenha.Password = True then
@@ -138,8 +158,7 @@ begin
   end;
 end;
 
-procedure TFormPrincipal.AddSenhas(id_senha, descricao, login, senha,
-  favorito: String; id_categoria: integer);
+procedure TFormPrincipal.AddSenhas(id_senha, descricao, login, senha, favorito, tipo: String);
 var
   item : TListViewItem;
   txt : TListItemText;
@@ -161,15 +180,27 @@ begin
       txt.Text := login;
 
        // Imagem Tipo
-      img := TListItemImage(Objects.FindDrawable('ImageTipo'));
-      if lancado = 'S' then
-        img.Bitmap := ImgContas.Bitmap
-      else
-        img.Bitmap := ImgLancarContas.Bitmap;
+//      img := TListItemImage(Objects.FindDrawable('ImageTipo'));
+//      if tipo = '01' then
+//        img.Bitmap := Img01.Bitmap
+//      else if tipo = '02' then
+//        img.Bitmap := Img02.Bitmap
+//      else if tipo = '03' then
+//        img.Bitmap := Img03.Bitmap
+//      else if tipo = '04' then
+//        img.Bitmap := Img04.Bitmap
+//      else if tipo = '05' then
+//        img.Bitmap := Img05.Bitmap
+//      else if tipo = '06' then
+//        img.Bitmap := Img06.Bitmap
+//      else if tipo = '07' then
+//        img.Bitmap := Img07.Bitmap
+//      else if tipo = '00' then
+//        img.Bitmap := Img00.Bitmap;
 
        // Imagem Ver
       img := TListItemImage(Objects.FindDrawable('ImageVer'));
-      img.Bitmap := ImgSituacao2.Bitmap;
+      img.Bitmap := ImgVerSenha.Bitmap;
 
        // Imagem Ver
       img := TListItemImage(Objects.FindDrawable('ImageExcluir'));
@@ -184,6 +215,28 @@ end;
 procedure TFormPrincipal.EdtPesquisarSenhasExit(Sender: TObject);
 begin
   //CarregarCategorias(EdtPesquisarSenhas.Text);
+end;
+
+procedure TFormPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  fancy.DisposeOf;
+end;
+
+procedure TFormPrincipal.FormCreate(Sender: TObject);
+begin
+    fancy := TFancyDialog.Create(FormTipos);
+
+//    Img01.Visible := False;
+//    Img02.Visible := False;
+//    Img03.Visible := False;
+//    Img04.Visible := False;
+//    Img05.Visible := False;
+//    Img06.Visible := False;
+//    Img07.Visible := False;
+//    Img00.Visible := False;
+
+  imgVerSenha.Visible := False;
+  imgExcluir.Visible := False;
 end;
 
 procedure TFormPrincipal.FormResize(Sender: TObject);
@@ -229,14 +282,15 @@ begin
   end;
 
   if swFavorito.isChecked then
-    favorito = 'S'
+    favorito:= 'S'
   else
-    favorito = 'N';
+    favorito:= 'N';
 
   if not DM.SalvarSenhas(EdtDescricao.Text,
                          EdtLogin.Text,
                          EdtSenha.Text,
                          favorito,
+                         codtipo_selecao,
                          erro) then
   begin
     ShowMessage(erro);
@@ -310,12 +364,12 @@ begin
     begin
       while not qry.eof do
       begin
-        AddSenhas(qry.FieldByName('id_senha').AsInteger,
+        AddSenhas(qry.FieldByName('id_senha').Value,
                   qry.FieldByName('descricao').AsString,
                   qry.FieldByName('login').AsString,
                   qry.FieldByName('senha').AsString,
                   qry.FieldByName('favorito').AsString,
-                  qry.FieldByName('tipo').AsInteger);
+                  qry.FieldByName('tipo').AsString);
 
         qry.next;
       end;

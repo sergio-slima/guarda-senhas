@@ -7,7 +7,8 @@ uses
   UDM in 'UDM.pas' {DM: TDataModule},
   UInicial in 'UInicial.pas' {FormInicial},
   ULogin in 'ULogin.pas' {FormLogin},
-  UPrincipal in 'UPrincipal.pas' {FormPrincipal};
+  UPrincipal in 'UPrincipal.pas' {FormPrincipal},
+  uFancyDialog in 'uFancyDialog.pas';
 
 {$R *.res}
 
