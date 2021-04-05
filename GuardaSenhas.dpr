@@ -8,7 +8,8 @@ uses
   UInicial in 'UInicial.pas' {FormInicial},
   ULogin in 'ULogin.pas' {FormLogin},
   UPrincipal in 'UPrincipal.pas' {FormPrincipal},
-  uFancyDialog in 'uFancyDialog.pas';
+  uFancyDialog in 'uFancyDialog.pas',
+  uFormat in 'uFormat.pas';
 
 {$R *.res}
 

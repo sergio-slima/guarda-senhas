@@ -72,6 +72,14 @@ type
     ActTab03: TChangeTabAction;
     ImgExcluir: TImage;
     ImgVerSenha: TImage;
+    Img00: TImage;
+    Img07: TImage;
+    Img06: TImage;
+    Img05: TImage;
+    Img04: TImage;
+    Img03: TImage;
+    Img02: TImage;
+    Img01: TImage;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -94,6 +102,7 @@ type
   private
     fancy : TFancyDialog;
 
+    procedure LimpaEdits;
     procedure MudarAba(img: TImage);
     procedure VerSenha;
     procedure ListarSenhas(descricao: string; clear: boolean);
@@ -180,23 +189,23 @@ begin
       txt.Text := login;
 
        // Imagem Tipo
-//      img := TListItemImage(Objects.FindDrawable('ImageTipo'));
-//      if tipo = '01' then
-//        img.Bitmap := Img01.Bitmap
-//      else if tipo = '02' then
-//        img.Bitmap := Img02.Bitmap
-//      else if tipo = '03' then
-//        img.Bitmap := Img03.Bitmap
-//      else if tipo = '04' then
-//        img.Bitmap := Img04.Bitmap
-//      else if tipo = '05' then
-//        img.Bitmap := Img05.Bitmap
-//      else if tipo = '06' then
-//        img.Bitmap := Img06.Bitmap
-//      else if tipo = '07' then
-//        img.Bitmap := Img07.Bitmap
-//      else if tipo = '00' then
-//        img.Bitmap := Img00.Bitmap;
+      img := TListItemImage(Objects.FindDrawable('ImageTipo'));
+      if tipo = '01' then
+        img.Bitmap := Img01.Bitmap
+      else if tipo = '02' then
+        img.Bitmap := Img02.Bitmap
+      else if tipo = '03' then
+        img.Bitmap := Img03.Bitmap
+      else if tipo = '04' then
+        img.Bitmap := Img04.Bitmap
+      else if tipo = '05' then
+        img.Bitmap := Img05.Bitmap
+      else if tipo = '06' then
+        img.Bitmap := Img06.Bitmap
+      else if tipo = '07' then
+        img.Bitmap := Img07.Bitmap
+      else if tipo = '00' then
+        img.Bitmap := Img00.Bitmap;
 
        // Imagem Ver
       img := TListItemImage(Objects.FindDrawable('ImageVer'));
@@ -224,16 +233,16 @@ end;
 
 procedure TFormPrincipal.FormCreate(Sender: TObject);
 begin
-    fancy := TFancyDialog.Create(FormTipos);
+  fancy := TFancyDialog.Create(FormTipos);
 
-//    Img01.Visible := False;
-//    Img02.Visible := False;
-//    Img03.Visible := False;
-//    Img04.Visible := False;
-//    Img05.Visible := False;
-//    Img06.Visible := False;
-//    Img07.Visible := False;
-//    Img00.Visible := False;
+  Img01.Visible := False;
+  Img02.Visible := False;
+  Img03.Visible := False;
+  Img04.Visible := False;
+  Img05.Visible := False;
+  Img06.Visible := False;
+  Img07.Visible := False;
+  Img00.Visible := False;
 
   imgVerSenha.Visible := False;
   imgExcluir.Visible := False;
@@ -297,7 +306,7 @@ begin
     Exit;
   end else
   begin
-    ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
+    fancy.Show(TIconDialog.Success, 'Concluido!', 'Conta Cadastrada com Sucesso', 'OK');
     Close
   end;
 
@@ -306,6 +315,8 @@ end;
 procedure TFormPrincipal.BtnVoltarClick(Sender: TObject);
 begin
   ActTab01.Execute;
+
+  LimpaEdits;
 end;
 
 procedure TFormPrincipal.BtnFavoritoClick(Sender: TObject);
@@ -338,6 +349,15 @@ procedure TFormPrincipal.LbxCategoriasItemClick(const Sender: TCustomListBox;
 begin
   //CarregarExplorar(EdtPesquisarSenhas.Text, '', item.Tag);
   MudarAba(ImgAba2);
+end;
+
+procedure TFormPrincipal.LimpaEdits;
+begin
+  EdtDescricao.Text:= '';
+  EdtLogin.Text:= '';
+  EdtSenha.Text:= '';
+  EdtTipo.Text:= '';
+  swFavorito.IsChecked:= False;
 end;
 
 procedure TFormPrincipal.ListarSenhas(descricao: string; clear: boolean);

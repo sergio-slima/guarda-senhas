@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
-  FMX.Objects, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit;
+  FMX.Objects, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
+  uFormat, uFancyDialog;
 
 type
   TFormLogin = class(TForm)
@@ -45,8 +46,11 @@ type
     procedure LblNovaContaClick(Sender: TObject);
     procedure LblResetarContaClick(Sender: TObject);
     procedure Label4Click(Sender: TObject);
+    procedure EdtConta_NascimentoTyping(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
+    fancy : TFancyDialog;
   public
     { Public declarations }
     conta_status: String;
@@ -68,12 +72,12 @@ var
 begin
   if EdtSenha.Text = '' then
   begin
-    ShowMessage('Digite sua senha!');
+    fancy.Show(TIconDialog.Info, 'Ops!', 'Digite sua senha.', 'OK');
     Exit;
   end;
   if not DM.ValidaSenha(EdtSenha.Text, id_usuario, erro) then
   begin
-    ShowMessage(erro);
+    fancy.Show(TIconDialog.Error, 'Erro', erro, 'OK');
     Exit;
   end;
 
@@ -95,39 +99,56 @@ begin
      (EdtConta_Nascimento.Text = '') and
      (EdtConta_Senha.Text = '') then
   begin
-    ShowMessage('Preencha todos os campos!');
+    fancy.Show(TIconDialog.Info, 'Ops!', 'Preencha todos os campos', 'OK');
     Exit;
   end;
 
   if conta_status = 'N' then
   begin
-    if not DM.CadastrarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
+    if not DM.CadastrarSenha(EdtConta_Email.Text,
+                             EdtConta_Nascimento.Text,
+                             EdtConta_Senha.Text,
+                             erro) then
     begin
       ShowMessage(erro);
       Exit;
     end else
     begin
-      ShowMessage('Conta cadastrado com sucesso. Faça o Login!');
+      fancy.Show(TIconDialog.Success, 'Success', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
       TabControl1.ActiveTab := TabLogin;
     end;
   end else if conta_status = 'A' then
   begin
-    if not DM.ResetarSenha(EdtConta_Email.Text, EdtConta_Nascimento.Text, EdtConta_Senha.Text, erro) then
+    if not DM.ResetarSenha(EdtConta_Email.Text,
+                           EdtConta_Nascimento.Text,
+                           EdtConta_Senha.Text,
+                           erro) then
     begin
       ShowMessage(erro);
       Exit;
     end else
     begin
-      ShowMessage('Senha resetada com sucesso. Faça o Login!');
+      fancy.Show(TIconDialog.Success, 'Success', 'Senha Resetada com Sucesso. Faça o Login!', 'OK');
       TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
     end;
   end;
 end;
 
+procedure TFormLogin.EdtConta_NascimentoTyping(Sender: TObject);
+begin
+  Formatar(EdtConta_Nascimento, TFormato.Dt);
+end;
+
+procedure TFormLogin.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  fancy.DisposeOf;
+end;
+
 procedure TFormLogin.FormCreate(Sender: TObject);
 begin
-  TabControl1.ActiveTab := TabInicial;
+  fancy := TFancyDialog.Create(FormLogin);
 
+  TabControl1.ActiveTab := TabInicial;
 end;
 
 procedure TFormLogin.FormShow(Sender: TObject);

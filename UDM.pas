@@ -135,7 +135,7 @@ begin
     qry.SQL.Add('INSERT INTO USUARIOS (EMAIL, NASCIMENTO, SENHA)');
     qry.SQL.Add('VALUES (:EMAIL, :NASCIMENTO, :SENHA)');
     qry.ParamByName('EMAIL').Value := email;
-    qry.ParamByName('NASCIMENTO').Value := nascimento;
+    qry.ParamByName('NASCIMENTO').Value := FormatDateTime('yyyy-mm-dd', StrToDateTime(nascimento));
     qry.ParamByName('SENHA').Value := senha;
     qry.ExecSQL;
 
@@ -165,7 +165,7 @@ begin
     qry.SQL.Add('WHERE EMAIL = :EMAIL');
     qry.SQL.Add('WHERE NASCIMENTO = :NASCIMENTO');
     qry.ParamByName('EMAIL').Value := email;
-    qry.ParamByName('NASCIMENTO').Value := nascimento;
+    qry.ParamByName('NASCIMENTO').Value := FormatDateTime('yyyy-mm-dd', StrToDateTime(nascimento));
     qry.Open;
 
     if qry.RecordCount > 0 then

@@ -29,6 +29,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure lvTiposItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
   private
     { Private declarations }
     fancy : TFancyDialog;
@@ -146,6 +148,15 @@ begin
   AddTipos('07', 'Cartões');
   AddTipos('00', 'Outros');
 
+end;
+
+procedure TFormTipos.lvTiposItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  FormPrincipal.CodTipo_Selecao := AItem.Tag;
+  FormPrincipal.NomTipo_Selecao := AItem.TagString;
+
+  Close;
 end;
 
 end.
