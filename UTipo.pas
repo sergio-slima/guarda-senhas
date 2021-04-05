@@ -61,7 +61,7 @@ begin
 
   try
     item := lvTipos.Items.Add;
-    item.Tag := codigo.ToInteger;
+    item.Detail := codigo;
     item.TagString := nome;
 
     with item do
@@ -153,7 +153,7 @@ end;
 procedure TFormTipos.lvTiposItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  FormPrincipal.CodTipo_Selecao := AItem.Tag;
+  FormPrincipal.CodTipo_Selecao := AItem.Detail;
   FormPrincipal.NomTipo_Selecao := AItem.TagString;
 
   Close;

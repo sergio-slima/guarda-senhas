@@ -35,11 +35,10 @@ type
     BtnHome: TImage;
     Layout6: TLayout;
     Rectangle1: TRectangle;
-    Edit1: TEdit;
-    lvExplorar: TListView;
+    EdtPesquisarFavoritos: TEdit;
     Line1: TLine;
     Line2: TLine;
-    Image1: TImage;
+    BtnPesquisarFavoritos: TImage;
     BtnNovo: TImage;
     Layout5: TLayout;
     BannerAd1: TBannerAd;
@@ -80,6 +79,7 @@ type
     Img03: TImage;
     Img02: TImage;
     Img01: TImage;
+    lvFavoritos: TListView;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -99,6 +99,7 @@ type
     procedure RtgTpoClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure BtnPesquisarFavoritosClick(Sender: TObject);
   private
     fancy : TFancyDialog;
 
@@ -106,7 +107,9 @@ type
     procedure MudarAba(img: TImage);
     procedure VerSenha;
     procedure ListarSenhas(descricao: string; clear: boolean);
+    procedure ListarFavoritos(descricao: string; clear: boolean);
     procedure AddSenhas(id_senha, descricao, login, senha, favorito, tipo: String);
+    procedure AddFavoritos(id_senha, descricao, login, senha, favorito, tipo: String);
     { Private declarations }
   public
     { Public declarations }
@@ -217,7 +220,61 @@ begin
 
     end;
   except on ex:Exception do
-    fancy.Show(TIconDialog.Error, 'Erro', 'Erro ao adicionar planos: '+ex.message, 'OK');
+    fancy.Show(TIconDialog.Error, 'Erro', 'Erro ao adicionar lista de senhas: '+ex.message, 'OK');
+  end;
+end;
+
+procedure TFormPrincipal.AddFavoritos(id_senha, descricao, login, senha, favorito, tipo: String);
+var
+  item : TListViewItem;
+  txt : TListItemText;
+  img : TListItemImage;
+begin
+  try
+    item := lvFavoritos.Items.Add;
+    with item do
+    begin
+
+      Detail := id_senha;
+
+      // Descricao
+      txt := TListItemText(Objects.FindDrawable('TxtDescricao'));
+      txt.Text := descricao;
+
+       // Login
+      txt := TListItemText(Objects.FindDrawable('TxtLogin'));
+      txt.Text := login;
+
+       // Imagem Tipo
+      img := TListItemImage(Objects.FindDrawable('ImageTipo'));
+      if tipo = '01' then
+        img.Bitmap := Img01.Bitmap
+      else if tipo = '02' then
+        img.Bitmap := Img02.Bitmap
+      else if tipo = '03' then
+        img.Bitmap := Img03.Bitmap
+      else if tipo = '04' then
+        img.Bitmap := Img04.Bitmap
+      else if tipo = '05' then
+        img.Bitmap := Img05.Bitmap
+      else if tipo = '06' then
+        img.Bitmap := Img06.Bitmap
+      else if tipo = '07' then
+        img.Bitmap := Img07.Bitmap
+      else if tipo = '00' then
+        img.Bitmap := Img00.Bitmap;
+
+       // Imagem Ver
+      img := TListItemImage(Objects.FindDrawable('ImageVer'));
+      img.Bitmap := ImgVerSenha.Bitmap;
+
+       // Imagem Ver
+      img := TListItemImage(Objects.FindDrawable('ImageExcluir'));
+      img.Bitmap := ImgExcluir.Bitmap;
+
+    end;
+  except on ex:Exception do
+    fancy.Show(TIconDialog.Error, 'Erro', 'Erro ao adicionar lista de senhas: '+ex.message, 'OK');
   end;
 end;
 
@@ -246,6 +303,8 @@ begin
 
   imgVerSenha.Visible := False;
   imgExcluir.Visible := False;
+
+  ListarSenhas('', true);
 end;
 
 procedure TFormPrincipal.FormResize(Sender: TObject);
@@ -271,6 +330,11 @@ end;
 procedure TFormPrincipal.BtnPesquisarClick(Sender: TObject);
 begin
   ListarSenhas(EdtPesquisarSenhas.Text, True);
+end;
+
+procedure TFormPrincipal.BtnPesquisarFavoritosClick(Sender: TObject);
+begin
+  ListarFavoritos(EdtPesquisarSenhas.Text, True);
 end;
 
 procedure TFormPrincipal.BtnSalvarClick(Sender: TObject);
@@ -306,8 +370,10 @@ begin
     Exit;
   end else
   begin
-    fancy.Show(TIconDialog.Success, 'Concluido!', 'Conta Cadastrada com Sucesso', 'OK');
-    Close
+    fancy.Show(TIconDialog.Success, 'Concluido!', 'Conta Cadastrada com Sucesso!', 'OK');
+    ListarSenhas('', true);
+    ActTab01.Execute;
+    LimpaEdits;
   end;
 
 end;
@@ -321,11 +387,15 @@ end;
 
 procedure TFormPrincipal.BtnFavoritoClick(Sender: TObject);
 begin
+  EdtPesquisarFavoritos.Text:= '';
+  ListarFavoritos('', true);
   ActTab02.Execute;
 end;
 
 procedure TFormPrincipal.BtnHomeClick(Sender: TObject);
 begin
+  EdtPesquisarSenhas.Text:= '';
+  ListarSenhas('',True);
   ActTab01.Execute;
 end;
 
@@ -360,6 +430,52 @@ begin
   swFavorito.IsChecked:= False;
 end;
 
+procedure TFormPrincipal.ListarFavoritos(descricao: string; clear: boolean);
+var
+  qry : TFDQuery;
+begin
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM SENHAS');
+    qry.SQL.Add('WHERE FAVORITO = :FAVORITO');
+    if EdtPesquisarSenhas.Text <> '' then
+    begin
+      qry.SQL.Add('AND DESCRICAO LIKE :DESCRICAO');
+      qry.ParamByName('DESCRICAO').Value := '%'+EdtPesquisarSenhas.Text+'%';
+    end;
+    qry.ParamByName('FAVORITO').Value := 'S';
+    qry.Open;
+
+    if clear = true then
+      lvSenhas.Items.Clear;
+
+    lvFavoritos.BeginUpdate;
+    if qry.RecordCount > 0 then
+    begin
+      while not qry.eof do
+      begin
+        AddFavoritos(qry.FieldByName('id_senha').Value,
+                     qry.FieldByName('descricao').AsString,
+                     qry.FieldByName('login').AsString,
+                     qry.FieldByName('senha').AsString,
+                     qry.FieldByName('favorito').AsString,
+                     qry.FieldByName('tipo').AsString);
+
+        qry.next;
+      end;
+    end;
+    lvFavoritos.EndUpdate;
+
+  finally
+    qry.DisposeOf;
+  end;
+end;
+
 procedure TFormPrincipal.ListarSenhas(descricao: string; clear: boolean);
 var
   qry : TFDQuery;
@@ -372,8 +488,11 @@ begin
     qry.Close;
     qry.SQL.Clear;
     qry.SQL.Add('SELECT * FROM SENHAS');
-    qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
-    qry.ParamByName('DESCRICAO').Value := '%';
+    if EdtPesquisarSenhas.Text <> '' then
+    begin
+      qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
+      qry.ParamByName('DESCRICAO').Value := '%'+EdtPesquisarSenhas.Text+'%';
+    end;
     qry.Open;
 
     if clear = true then
