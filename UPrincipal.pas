@@ -106,8 +106,8 @@ type
     procedure LimpaEdits;
     procedure MudarAba(img: TImage);
     procedure VerSenha;
-    procedure ListarSenhas(descricao: string; clear: boolean);
-    procedure ListarFavoritos(descricao: string; clear: boolean);
+    procedure ListarSenhas(descricao: string);
+    procedure ListarFavoritos(descricao: string);
     procedure AddSenhas(id_senha, descricao, login, senha, favorito, tipo: String);
     procedure AddFavoritos(id_senha, descricao, login, senha, favorito, tipo: String);
     { Private declarations }
@@ -304,7 +304,7 @@ begin
   imgVerSenha.Visible := False;
   imgExcluir.Visible := False;
 
-  ListarSenhas('', true);
+  ListarSenhas('');
 end;
 
 procedure TFormPrincipal.FormResize(Sender: TObject);
@@ -329,12 +329,12 @@ end;
 
 procedure TFormPrincipal.BtnPesquisarClick(Sender: TObject);
 begin
-  ListarSenhas(EdtPesquisarSenhas.Text, True);
+  ListarSenhas(EdtPesquisarSenhas.Text);
 end;
 
 procedure TFormPrincipal.BtnPesquisarFavoritosClick(Sender: TObject);
 begin
-  ListarFavoritos(EdtPesquisarSenhas.Text, True);
+  ListarFavoritos(EdtPesquisarSenhas.Text);
 end;
 
 procedure TFormPrincipal.BtnSalvarClick(Sender: TObject);
@@ -371,7 +371,7 @@ begin
   end else
   begin
     fancy.Show(TIconDialog.Success, 'Concluido!', 'Conta Cadastrada com Sucesso!', 'OK');
-    ListarSenhas('', true);
+    ListarSenhas('');
     ActTab01.Execute;
     LimpaEdits;
   end;
@@ -388,14 +388,14 @@ end;
 procedure TFormPrincipal.BtnFavoritoClick(Sender: TObject);
 begin
   EdtPesquisarFavoritos.Text:= '';
-  ListarFavoritos('', true);
+  ListarFavoritos('');
   ActTab02.Execute;
 end;
 
 procedure TFormPrincipal.BtnHomeClick(Sender: TObject);
 begin
   EdtPesquisarSenhas.Text:= '';
-  ListarSenhas('',True);
+  ListarSenhas('');
   ActTab01.Execute;
 end;
 
@@ -430,7 +430,7 @@ begin
   swFavorito.IsChecked:= False;
 end;
 
-procedure TFormPrincipal.ListarFavoritos(descricao: string; clear: boolean);
+procedure TFormPrincipal.ListarFavoritos(descricao: string);
 var
   qry : TFDQuery;
 begin
@@ -451,8 +451,7 @@ begin
     qry.ParamByName('FAVORITO').Value := 'S';
     qry.Open;
 
-    if clear = true then
-      lvSenhas.Items.Clear;
+    lvFavoritos.Items.Clear;
 
     lvFavoritos.BeginUpdate;
     if qry.RecordCount > 0 then
@@ -476,7 +475,7 @@ begin
   end;
 end;
 
-procedure TFormPrincipal.ListarSenhas(descricao: string; clear: boolean);
+procedure TFormPrincipal.ListarSenhas(descricao: string);
 var
   qry : TFDQuery;
 begin
@@ -495,8 +494,7 @@ begin
     end;
     qry.Open;
 
-    if clear = true then
-      lvSenhas.Items.Clear;
+    lvSenhas.Items.Clear;
 
     lvSenhas.BeginUpdate;
     if qry.RecordCount > 0 then
