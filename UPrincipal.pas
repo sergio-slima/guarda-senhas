@@ -100,9 +100,14 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure BtnPesquisarFavoritosClick(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure lvSenhasItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
   private
     fancy : TFancyDialog;
 
+    procedure ClickLogout;
     procedure LimpaEdits;
     procedure MudarAba(img: TImage);
     procedure VerSenha;
@@ -110,12 +115,14 @@ type
     procedure ListarFavoritos(descricao: string);
     procedure AddSenhas(id_senha, descricao, login, senha, favorito, tipo: String);
     procedure AddFavoritos(id_senha, descricao, login, senha, favorito, tipo: String);
+    procedure Deletar(Sender: TObject);
     { Private declarations }
   public
     { Public declarations }
     id_categoria_global : integer;
     id_usuario_global : integer;
     ind_fechar_telas : boolean;
+    id_senha_global: integer;
 
     CodTipo_Selecao : String;
     NomTipo_Selecao : String;
@@ -283,6 +290,21 @@ begin
   //CarregarCategorias(EdtPesquisarSenhas.Text);
 end;
 
+procedure TFormPrincipal.Deletar(Sender: TObject);
+var
+  erro: String;
+begin
+  if not DM.ExcluirSenhas(id_senha_global, erro) then
+  begin
+    fancy.Show(TIconDialog.Error, 'Erro', 'Erro ao excluir: '+erro, 'OK');
+    exit;
+  end else
+  begin
+    fancy.Show(TIconDialog.Success, 'Success', 'Registro excluido!', 'OK');
+    ListarSenhas('');
+  end;
+end;
+
 procedure TFormPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   fancy.DisposeOf;
@@ -290,7 +312,7 @@ end;
 
 procedure TFormPrincipal.FormCreate(Sender: TObject);
 begin
-  fancy := TFancyDialog.Create(FormTipos);
+  fancy := TFancyDialog.Create(FormPrincipal);
 
   Img01.Visible := False;
   Img02.Visible := False;
@@ -304,7 +326,41 @@ begin
   imgVerSenha.Visible := False;
   imgExcluir.Visible := False;
 
+  TabControl.ActiveTab := TabAba1;
   ListarSenhas('');
+end;
+
+procedure TFormPrincipal.FormKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+{$IFDEF ANDROID}
+var
+  FService: IFMXVirtualKeyboardService;
+{$ENDIF}
+begin
+{$IFDEF ANDROID}
+  if (Key = vkHardwareBack) then
+  begin
+    TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(FService));
+
+    if (FService <> nil) and (TVirtualKeyboardState.Visible in FService.VirtualKeyBoardState) then
+    begin
+      //botao back pressionado e teclado visivel
+      //apenas fecha teclado
+    end else
+    begin
+      if (TabControl.ActiveTab = Tab02) or
+         (TabControl.ActiveTab = Tab03) then
+      begin
+        Key := 0;
+        ActTab01.Execute;
+      end else
+      begin
+        Key := 0;
+        fancy.Show(TIconDialog.Question, 'Logout', 'Deseja sair?', 'Sim', ClickLogout, 'Não');
+      end;
+    end;
+  end;
+{$ENDIF}
 end;
 
 procedure TFormPrincipal.FormResize(Sender: TObject);
@@ -366,7 +422,7 @@ begin
                          codtipo_selecao,
                          erro) then
   begin
-    ShowMessage(erro);
+    fancy.Show(TIconDialog.Error, 'Ops!', erro, 'OK');
     Exit;
   end else
   begin
@@ -383,6 +439,11 @@ begin
   ActTab01.Execute;
 
   LimpaEdits;
+end;
+
+procedure TFormPrincipal.ClickLogout;
+begin
+  Close;
 end;
 
 procedure TFormPrincipal.BtnFavoritoClick(Sender: TObject);
@@ -516,6 +577,30 @@ begin
   finally
     qry.DisposeOf;
   end;
+end;
+
+procedure TFormPrincipal.lvSenhasItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  // CLIQUE NA IMAGEM
+  if TListView(sender).Selected <> nil then
+  begin
+    if ItemObject is TListItemImage then
+    begin
+      if TListItemImage(ItemObject).Name = 'ImageVer' then
+      begin
+        ShowMessage('Ver a senha');
+      end;
+      if TListItemImage(ItemObject).Name = 'ImageExcluir' then
+      begin
+        fancy.Show(TIconDialog.Question, 'Excluir', 'Deseja excluir?', 'Sim', Deletar, 'Não');
+        id_senha_global:= StrToInt(lvSenhas.Items[ItemIndex].detail);
+      end;
+    end;
+  end;
+
+
 end;
 
 procedure TFormPrincipal.lvSenhasUpdateObjects(const Sender: TObject;

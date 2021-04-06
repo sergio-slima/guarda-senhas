@@ -77,15 +77,14 @@ begin
     qry.Close;
     qry.SQL.Clear;
     qry.SQL.Add('DELETE FROM SENHAS');
-    qry.SQL.Add('WHERE ID_SENHA LIKE :ID_SENHA');
+    qry.SQL.Add('WHERE ID_SENHA = :ID_SENHA');
     qry.ParamByName('ID_SENHA').Value := id_senha;
-    qry.Open;
+    qry.ExecSQL;
 
-    if qry.RecordCount > 0 then
-      Result := True;
-
-  finally
+    Result := True;
     qry.DisposeOf;
+  except on e:Exception do
+    erro:= e.Message;
   end;
 end;
 
