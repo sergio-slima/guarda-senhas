@@ -147,7 +147,6 @@ begin
   img.Opacity := 1;
   TabControl.GotoVisibleTab(img.Tag, TTabTransition.Slide);
 
-
 end;
 
 procedure TFormPrincipal.RtgTpoClick(Sender: TObject);
@@ -221,7 +220,7 @@ begin
       img := TListItemImage(Objects.FindDrawable('ImageVer'));
       img.Bitmap := ImgVerSenha.Bitmap;
 
-       // Imagem Ver
+       // Imagem Excluir
       img := TListItemImage(Objects.FindDrawable('ImageExcluir'));
       img.Bitmap := ImgExcluir.Bitmap;
 
@@ -327,7 +326,7 @@ begin
   imgExcluir.Visible := False;
 
   TabControl.ActiveTab := TabAba1;
-  ListarSenhas('');
+
 end;
 
 procedure TFormPrincipal.FormKeyUp(Sender: TObject; var Key: Word;
@@ -371,9 +370,7 @@ end;
 procedure TFormPrincipal.FormShow(Sender: TObject);
 begin
   ActTab01.Execute;
-  //CarregarCategorias(EdtPesquisarSenhas.Text);
-  //CarregarExplorar('','');
-  //CarregarAgendamentos;
+  ListarSenhas('');
 end;
 
 procedure TFormPrincipal.BtnNovoClick(Sender: TObject);
