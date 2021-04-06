@@ -390,7 +390,7 @@ end;
 
 procedure TFormPrincipal.BtnPesquisarFavoritosClick(Sender: TObject);
 begin
-  ListarFavoritos(EdtPesquisarSenhas.Text);
+  ListarFavoritos(EdtPesquisarFavoritos.Text);
 end;
 
 procedure TFormPrincipal.BtnSalvarClick(Sender: TObject);
@@ -504,12 +504,13 @@ begin
     qry.SQL.Clear;
     qry.SQL.Add('SELECT * FROM SENHAS');
     qry.SQL.Add('WHERE FAVORITO = :FAVORITO');
-    if EdtPesquisarSenhas.Text <> '' then
+    if EdtPesquisarFavoritos.Text <> '' then
     begin
       qry.SQL.Add('AND DESCRICAO LIKE :DESCRICAO');
-      qry.ParamByName('DESCRICAO').Value := '%'+EdtPesquisarSenhas.Text+'%';
+      qry.ParamByName('DESCRICAO').Value := '%'+EdtPesquisarFavoritos.Text+'%';
     end;
     qry.ParamByName('FAVORITO').Value := 'S';
+    qry.SQL.Add('ORDER BY DESCRICAO');
     qry.Open;
 
     lvFavoritos.Items.Clear;
@@ -553,6 +554,7 @@ begin
       qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
       qry.ParamByName('DESCRICAO').Value := '%'+EdtPesquisarSenhas.Text+'%';
     end;
+    qry.SQL.Add('ORDER BY DESCRICAO');
     qry.Open;
 
     lvSenhas.Items.Clear;
