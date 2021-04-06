@@ -24,7 +24,7 @@ type
     function CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
     function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
 
-    function SalvarSenhas(descricao, login, senha, favorito, tipo: String; out erro: string): Boolean;
+    function SalvarSenhas(descricao, login, senha, favorito, tipo: String; id_usuario: integer; out erro: string): Boolean;
     function ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
   end;
 
@@ -191,7 +191,7 @@ begin
 end;
 
 function TDM.SalvarSenhas(descricao, login, senha, favorito, tipo: String;
-  out erro: string): Boolean;
+  id_usuario: integer; out erro: string): Boolean;
 var
   qry : TFDQuery;
 begin
@@ -204,13 +204,14 @@ begin
 
     qry.Close;
     qry.SQL.Clear;
-    qry.SQL.Add('INSERT INTO SENHAS (DESCRICAO, LOGIN, SENHA, FAVORITO, TIPO)');
-    qry.SQL.Add('VALUES (:DESCRICAO, :LOGIN, :SENHA, :FAVORITO, :TIPO)');
+    qry.SQL.Add('INSERT INTO SENHAS (DESCRICAO, LOGIN, SENHA, FAVORITO, TIPO, ID_USUARIO)');
+    qry.SQL.Add('VALUES (:DESCRICAO, :LOGIN, :SENHA, :FAVORITO, :TIPO, :ID_USUARIO)');
     qry.ParamByName('DESCRICAO').Value := descricao;
     qry.ParamByName('LOGIN').Value := login;
     qry.ParamByName('SENHA').Value := senha;
     qry.ParamByName('FAVORITO').Value := favorito;
     qry.ParamByName('TIPO').Value := tipo;
+    qry.ParamByName('ID_USUARIO').Value := id_usuario;
     qry.ExecSQL;
 
     qry.DisposeOf;

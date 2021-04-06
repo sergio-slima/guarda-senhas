@@ -420,6 +420,7 @@ begin
                          EdtSenha.Text,
                          favorito,
                          codtipo_selecao,
+                         id_usuario_global,
                          erro) then
   begin
     fancy.Show(TIconDialog.Error, 'Ops!', erro, 'OK');
@@ -504,13 +505,15 @@ begin
     qry.SQL.Clear;
     qry.SQL.Add('SELECT * FROM SENHAS');
     qry.SQL.Add('WHERE FAVORITO = :FAVORITO');
+    qry.SQL.Add('AND ID_USUARIO = :ID_USUARIO');
     if EdtPesquisarFavoritos.Text <> '' then
     begin
       qry.SQL.Add('AND DESCRICAO LIKE :DESCRICAO');
       qry.ParamByName('DESCRICAO').Value := '%'+EdtPesquisarFavoritos.Text+'%';
     end;
-    qry.ParamByName('FAVORITO').Value := 'S';
     qry.SQL.Add('ORDER BY DESCRICAO');
+    qry.ParamByName('FAVORITO').Value := 'S';
+    qry.ParamByName('ID_USUARIO').Value := id_usuario_global;
     qry.Open;
 
     lvFavoritos.Items.Clear;
@@ -549,11 +552,13 @@ begin
     qry.Close;
     qry.SQL.Clear;
     qry.SQL.Add('SELECT * FROM SENHAS');
+    qry.SQL.Add('WHERE ID_USUARIO = :ID_USUARIO');
     if EdtPesquisarSenhas.Text <> '' then
     begin
-      qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
+      qry.SQL.Add('AND DESCRICAO LIKE :DESCRICAO');
       qry.ParamByName('DESCRICAO').Value := '%'+EdtPesquisarSenhas.Text+'%';
     end;
+    qry.ParamByName('ID_USUARIO').Value := id_usuario_global;
     qry.SQL.Add('ORDER BY DESCRICAO');
     qry.Open;
 
@@ -592,12 +597,12 @@ begin
     begin
       if TListItemImage(ItemObject).Name = 'ImageVer' then
       begin
-        ShowMessage('Ver a senha');
+        fancy.Show(TIconDialog.Success, 'Ops!', 'Em desenvolvimento!', 'OK');
       end;
       if TListItemImage(ItemObject).Name = 'ImageExcluir' then
       begin
-        fancy.Show(TIconDialog.Question, 'Excluir', 'Deseja excluir?', 'Sim', Deletar, 'Não');
         id_senha_global:= StrToInt(lvSenhas.Items[ItemIndex].detail);
+        fancy.Show(TIconDialog.Question, 'Excluir', 'Deseja excluir?', 'Sim', Deletar, 'Não');
       end;
     end;
   end;
