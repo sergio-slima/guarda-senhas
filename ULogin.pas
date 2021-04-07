@@ -6,7 +6,10 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Objects, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
-  uFormat, uFancyDialog;
+  uFormat, uFancyDialog, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
   TFormLogin = class(TForm)
@@ -39,6 +42,7 @@ type
     EdtConta_Email: TEdit;
     Image2: TImage;
     LblResetarConta: TLabel;
+    FDQuery1: TFDQuery;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
@@ -51,6 +55,8 @@ type
   private
     { Private declarations }
     fancy : TFancyDialog;
+
+    procedure BuscarLanguage;
   public
     { Public declarations }
     conta_status: String;
@@ -134,6 +140,29 @@ begin
   end;
 end;
 
+procedure TFormLogin.BuscarLanguage;
+var
+  qry : TFDQuery;
+begin
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM CONFIG');
+    qry.Open;
+
+    if qry.RecordCount > 0 then
+      FormPrincipal.id_language_global:= qry.FieldByName('LANGUAGE').AsString
+    else
+      fancy.Show(TIconDialog.Error, 'Error', 'Language not found!', 'OK');
+  finally
+    qry.DisposeOf;
+  end;
+end;
+
 procedure TFormLogin.EdtConta_NascimentoTyping(Sender: TObject);
 begin
   Formatar(EdtConta_Nascimento, TFormato.Dt);
@@ -154,6 +183,8 @@ end;
 procedure TFormLogin.FormShow(Sender: TObject);
 begin
   TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
+
+  BuscarLanguage;
 end;
 
 procedure TFormLogin.Label4Click(Sender: TObject);

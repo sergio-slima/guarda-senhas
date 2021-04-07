@@ -6,7 +6,10 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.TabControl,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.Objects, FMX.Layouts,
-  System.Actions, FMX.ActnList;
+  System.Actions, FMX.ActnList, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, UDM, UPrincipal;
 
 type
   TFormInicial = class(TForm)
@@ -19,7 +22,6 @@ type
     Layout2: TLayout;
     Image1: TImage;
     Label1: TLabel;
-    Label2: TLabel;
     Layout3: TLayout;
     Image2: TImage;
     Label3: TLabel;
@@ -42,6 +44,14 @@ type
     ActTab2: TChangeTabAction;
     ActTab3: TChangeTabAction;
     ActTab4: TChangeTabAction;
+    Layout1: TLayout;
+    Layout6: TLayout;
+    ImgUS: TImage;
+    ImgPT: TImage;
+    RdbUS: TRadioButton;
+    RdbPT: TRadioButton;
+    Label2: TLabel;
+    FDQuery1: TFDQuery;
     procedure FormCreate(Sender: TObject);
     procedure NavegacaoAba(cont: integer);
     procedure BtnVoltarClick(Sender: TObject);
@@ -49,8 +59,10 @@ type
     procedure BtnLoginClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtnNovaContaClick(Sender: TObject);
+    procedure ImgPTClick(Sender: TObject);
   private
     { Private declarations }
+    procedure GravaConfig;
   public
     { Public declarations }
   end;
@@ -109,6 +121,48 @@ begin
   lytProximo.Visible:=True;
   lytBotoes.Visible:=False;
   NavegacaoAba(-1);
+end;
+
+procedure TFormInicial.GravaConfig;
+var
+  qry : TFDQuery;
+  Language: string;
+begin
+  RdbUS.IsChecked:= not RdbPT.IsChecked;
+
+  if RdbUS.IsChecked then
+    Language:= 'US'
+  else
+    Language:= 'PT';
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('INSERT INTO CONFIG (LANGUAGE, TELA_INICIAL)');
+    qry.SQL.Add('VALUES (:LANGUAGE, :TELA_INICIAL)');
+    qry.ParamByName('LANGUAGE').Value := Language;
+    qry.ParamByName('TELA_INICIAL').Value := 'S';
+    qry.ExecSQL;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM CONFIG');
+    qry.Open;
+    if qry.RecordCount > 0 then
+      FormPrincipal.id_language_global:= qry.FieldByName('LANGUAGE').AsString;
+
+    qry.DisposeOf;
+  except on ex:Exception do
+    ShowMessage(ex.Message);
+  end;
+end;
+
+procedure TFormInicial.ImgPTClick(Sender: TObject);
+begin
+  GravaConfig;
 end;
 
 procedure TFormInicial.NavegacaoAba(cont: integer);

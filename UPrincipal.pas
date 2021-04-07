@@ -123,6 +123,7 @@ type
     id_usuario_global : integer;
     ind_fechar_telas : boolean;
     id_senha_global: integer;
+    id_language_global: String;
 
     CodTipo_Selecao : String;
     NomTipo_Selecao : String;
