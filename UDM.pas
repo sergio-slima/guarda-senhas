@@ -26,6 +26,9 @@ type
 
     function SalvarSenhas(descricao, login, senha, favorito, tipo: String; id_usuario: integer; out erro: string): Boolean;
     function ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
+
+    function ValidaLanguage(out language: string; out erro: string): Boolean;
+    function ValidaTelaInicial: Boolean;
   end;
 
 var
@@ -34,6 +37,8 @@ var
 implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
+
+uses UPrincipal;
 
 {$R *.dfm}
 
@@ -88,6 +93,32 @@ begin
   end;
 end;
 
+function TDM.ValidaLanguage(out language: string; out erro: string): Boolean;
+var
+  qry : TFDQuery;
+begin
+  Result:= False;
+  erro := '';
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM CONFIG');
+    qry.Open;
+    if qry.RecordCount > 0 then
+    begin
+      language:= qry.FieldByName('LANGUAGE').AsString;
+      Result := True;
+    end else
+      erro:= 'Language not found!';
+  finally
+    qry.DisposeOf;
+  end;
+end;
+
 function TDM.ValidaSenha(senha: String; out id_usuario: integer; out erro: string): Boolean;
 var
   qry : TFDQuery;
@@ -113,6 +144,29 @@ begin
       Result := True;
     end else
       erro:= 'Senha inválida ou não existe!';
+  finally
+    qry.DisposeOf;
+  end;
+end;
+
+function TDM.ValidaTelaInicial: Boolean;
+var
+  qry : TFDQuery;
+begin
+  Result:= False;
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM CONFIG WHERE TELA_INICIAL = :TELA_INICIAL');
+    qry.ParamByName('TELA_INICIAL').AsString:= 'S';
+    qry.Open;
+    if qry.RecordCount > 0 then
+      Result := True;
+
   finally
     qry.DisposeOf;
   end;

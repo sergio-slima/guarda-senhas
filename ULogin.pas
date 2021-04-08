@@ -42,7 +42,6 @@ type
     EdtConta_Email: TEdit;
     Image2: TImage;
     LblResetarConta: TLabel;
-    FDQuery1: TFDQuery;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
@@ -60,6 +59,7 @@ type
   public
     { Public declarations }
     conta_status: String;
+    id_language: String;
   end;
 
 var
@@ -155,7 +155,7 @@ begin
     qry.Open;
 
     if qry.RecordCount > 0 then
-      FormPrincipal.id_language_global:= qry.FieldByName('LANGUAGE').AsString
+      id_language:= qry.FieldByName('LANGUAGE').AsString
     else
       fancy.Show(TIconDialog.Error, 'Error', 'Language not found!', 'OK');
   finally
