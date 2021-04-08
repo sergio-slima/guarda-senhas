@@ -26,7 +26,7 @@ type
     Rectangle3: TRectangle;
     EdtSenha: TEdit;
     BtnAcessar: TRectangle;
-    Label2: TLabel;
+    LblAcessar: TLabel;
     Layout4: TLayout;
     Image3: TImage;
     Layout5: TLayout;
@@ -37,7 +37,7 @@ type
     BtnCadastrar: TRectangle;
     LblCadastrar: TLabel;
     Layout6: TLayout;
-    Label4: TLabel;
+    LblLogin: TLabel;
     Rectangle7: TRectangle;
     EdtConta_Email: TEdit;
     Image2: TImage;
@@ -48,7 +48,7 @@ type
     procedure BtnCadastrarClick(Sender: TObject);
     procedure LblNovaContaClick(Sender: TObject);
     procedure LblResetarContaClick(Sender: TObject);
-    procedure Label4Click(Sender: TObject);
+    procedure LblLoginClick(Sender: TObject);
     procedure EdtConta_NascimentoTyping(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
@@ -56,6 +56,7 @@ type
     fancy : TFancyDialog;
 
     procedure BuscarLanguage;
+    procedure AtualizarLanguage(valor: string);
   public
     { Public declarations }
     conta_status: String;
@@ -71,6 +72,34 @@ implementation
 
 uses UDM, UPrincipal;
 
+procedure TFormLogin.AtualizarLanguage(valor: string);
+begin
+  if valor = 'US' then
+  begin
+    LblLogin.Text:= 'I already have an account. Click to login';
+    LblNovaConta.Text:= 'New Account';
+    LblResetarConta.Text:= 'I forgot my password';
+    LblAcessar.Text:= 'Login';
+    LblCadastrar.Text:= 'Register New Account';
+    EdtSenha.TextPrompt:= 'Password';
+    EdtConta_Email.TextPrompt:= 'Email';
+    EdtConta_Nascimento.TextPrompt:= 'Birth Date';
+    EdtConta_Senha.TextPrompt:= 'Password';
+  end
+  else if valor = 'PT' then
+  begin
+    LblLogin.Text:= 'Já tenho conta. Clique para fazer login.';
+    LblNovaConta.Text:= 'Cadastrar nova conta';
+    LblResetarConta.Text:= 'Esqueci minha senha';
+    LblAcessar.Text:= 'Acessar';
+    LblCadastrar.Text:= 'Cadastrar nova conta';
+    EdtSenha.TextPrompt:= 'Senha';
+    EdtConta_Email.TextPrompt:= 'E-mail';
+    EdtConta_Nascimento.TextPrompt:= 'Data Nascimento';
+    EdtConta_Senha.TextPrompt:= 'Senha';
+  end;
+end;
+
 procedure TFormLogin.BtnAcessarClick(Sender: TObject);
 var
   erro: string;
@@ -78,7 +107,10 @@ var
 begin
   if EdtSenha.Text = '' then
   begin
-    fancy.Show(TIconDialog.Info, 'Ops!', 'Digite sua senha.', 'OK');
+    if id_language = 'US' then
+      fancy.Show(TIconDialog.Info, 'Ops!', 'Password required.', 'OK')
+    else
+      fancy.Show(TIconDialog.Info, 'Ops!', 'Digite sua senha.', 'OK');
     Exit;
   end;
   if not DM.ValidaSenha(EdtSenha.Text, id_usuario, erro) then
@@ -105,7 +137,10 @@ begin
      (EdtConta_Nascimento.Text = '') and
      (EdtConta_Senha.Text = '') then
   begin
-    fancy.Show(TIconDialog.Info, 'Ops!', 'Preencha todos os campos', 'OK');
+    if id_language = 'US' then
+      fancy.Show(TIconDialog.Info, 'Ops!', 'All required fields', 'OK')
+    else
+      fancy.Show(TIconDialog.Info, 'Ops!', 'Preencha todos os campos', 'OK');
     Exit;
   end;
 
@@ -120,7 +155,10 @@ begin
       Exit;
     end else
     begin
-      fancy.Show(TIconDialog.Success, 'Success', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
+      if id_language = 'US' then
+        fancy.Show(TIconDialog.Success, 'Success', 'Registered Success. Login!', 'OK')
+      else
+        fancy.Show(TIconDialog.Success, 'Success', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
       TabControl1.ActiveTab := TabLogin;
     end;
   end else if conta_status = 'A' then
@@ -134,7 +172,10 @@ begin
       Exit;
     end else
     begin
-      fancy.Show(TIconDialog.Success, 'Success', 'Senha Resetada com Sucesso. Faça o Login!', 'OK');
+      if id_language = 'US' then
+        fancy.Show(TIconDialog.Success, 'Success', 'Registered Success. Login!', 'OK')
+      else
+        fancy.Show(TIconDialog.Success, 'Success', 'Senha Resetada com Sucesso. Faça o Login!', 'OK');
       TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
     end;
   end;
@@ -158,6 +199,8 @@ begin
       id_language:= qry.FieldByName('LANGUAGE').AsString
     else
       fancy.Show(TIconDialog.Error, 'Error', 'Language not found!', 'OK');
+
+    AtualizarLanguage(id_language);
   finally
     qry.DisposeOf;
   end;
@@ -187,7 +230,7 @@ begin
   BuscarLanguage;
 end;
 
-procedure TFormLogin.Label4Click(Sender: TObject);
+procedure TFormLogin.LblLoginClick(Sender: TObject);
 begin
   //TabControl1.ActiveTab := TabLogin;
   TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
@@ -197,7 +240,10 @@ procedure TFormLogin.LblNovaContaClick(Sender: TObject);
 begin
 //  TabControl1.ActiveTab := TabNovaConta;
   conta_status:= 'N';
-  LblCadastrar.Text:='Cadastrar nova conta';
+  if id_language = 'US' then
+    LblCadastrar.Text:='Register New Account'
+  else
+    LblCadastrar.Text:='Cadastrar nova conta';
   TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
 end;
 
@@ -205,7 +251,10 @@ procedure TFormLogin.LblResetarContaClick(Sender: TObject);
 begin
 //  TabControl1.ActiveTab := TabNovaConta;
   conta_status:= 'A';
-  LblCadastrar.Text:='Resetar senha';
+  if id_language = 'US' then
+    LblCadastrar.Text:='Reset Password'
+  else
+    LblCadastrar.Text:='Resetar senha';
   TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
 end;
 
