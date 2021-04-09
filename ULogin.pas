@@ -55,7 +55,6 @@ type
     { Private declarations }
     fancy : TFancyDialog;
 
-    procedure BuscarLanguage;
     procedure AtualizarLanguage(valor: string);
   public
     { Public declarations }
@@ -79,8 +78,8 @@ begin
     LblLogin.Text:= 'I already have an account. Click to login';
     LblNovaConta.Text:= 'New Account';
     LblResetarConta.Text:= 'I forgot my password';
-    LblAcessar.Text:= 'Login';
-    LblCadastrar.Text:= 'Register New Account';
+    LblAcessar.Text:= 'Log in';
+    LblCadastrar.Text:= 'Sign up';
     EdtSenha.TextPrompt:= 'Password';
     EdtConta_Email.TextPrompt:= 'Email';
     EdtConta_Nascimento.TextPrompt:= 'Birth Date';
@@ -94,7 +93,7 @@ begin
     LblAcessar.Text:= 'Acessar';
     LblCadastrar.Text:= 'Cadastrar nova conta';
     EdtSenha.TextPrompt:= 'Senha';
-    EdtConta_Email.TextPrompt:= 'E-mail';
+    EdtConta_Email.TextPrompt:= 'Email';
     EdtConta_Nascimento.TextPrompt:= 'Data Nascimento';
     EdtConta_Senha.TextPrompt:= 'Senha';
   end;
@@ -108,7 +107,7 @@ begin
   if EdtSenha.Text = '' then
   begin
     if id_language = 'US' then
-      fancy.Show(TIconDialog.Info, 'Ops!', 'Password required.', 'OK')
+      fancy.Show(TIconDialog.Info, 'Ops!', 'Password required.', 'TRY AGAIN')
     else
       fancy.Show(TIconDialog.Info, 'Ops!', 'Digite sua senha.', 'OK');
     Exit;
@@ -138,7 +137,7 @@ begin
      (EdtConta_Senha.Text = '') then
   begin
     if id_language = 'US' then
-      fancy.Show(TIconDialog.Info, 'Ops!', 'All required fields', 'OK')
+      fancy.Show(TIconDialog.Info, 'Ops!', 'All required fields', 'TRY AGAIN')
     else
       fancy.Show(TIconDialog.Info, 'Ops!', 'Preencha todos os campos', 'OK');
     Exit;
@@ -156,9 +155,9 @@ begin
     end else
     begin
       if id_language = 'US' then
-        fancy.Show(TIconDialog.Success, 'Success', 'Registered Success. Login!', 'OK')
+        fancy.Show(TIconDialog.Success, 'Success!', 'Registered Successfully. Login!', 'OK')
       else
-        fancy.Show(TIconDialog.Success, 'Success', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
+        fancy.Show(TIconDialog.Success, 'Success!', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
       TabControl1.ActiveTab := TabLogin;
     end;
   end else if conta_status = 'A' then
@@ -173,36 +172,11 @@ begin
     end else
     begin
       if id_language = 'US' then
-        fancy.Show(TIconDialog.Success, 'Success', 'Registered Success. Login!', 'OK')
+        fancy.Show(TIconDialog.Success, 'Success!', 'Registered Successfully. Login!', 'OK')
       else
-        fancy.Show(TIconDialog.Success, 'Success', 'Senha Resetada com Sucesso. Faça o Login!', 'OK');
+        fancy.Show(TIconDialog.Success, 'Success!', 'Senha Resetada com Sucesso. Faça o Login!', 'OK');
       TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
     end;
-  end;
-end;
-
-procedure TFormLogin.BuscarLanguage;
-var
-  qry : TFDQuery;
-begin
-
-  try
-    qry := TFDQuery.Create(nil);
-    qry.Connection := DM.Conexao;
-
-    qry.Close;
-    qry.SQL.Clear;
-    qry.SQL.Add('SELECT * FROM CONFIG');
-    qry.Open;
-
-    if qry.RecordCount > 0 then
-      id_language:= qry.FieldByName('LANGUAGE').AsString
-    else
-      fancy.Show(TIconDialog.Error, 'Error', 'Language not found!', 'OK');
-
-    AtualizarLanguage(id_language);
-  finally
-    qry.DisposeOf;
   end;
 end;
 
@@ -224,10 +198,15 @@ begin
 end;
 
 procedure TFormLogin.FormShow(Sender: TObject);
+var
+  language, erro: string;
 begin
   TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
 
-  BuscarLanguage;
+  if DM.ValidaLanguage(language, erro) then
+    id_language:= language
+  else
+    fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
 end;
 
 procedure TFormLogin.LblLoginClick(Sender: TObject);

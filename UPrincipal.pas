@@ -116,6 +116,7 @@ type
     procedure AddSenhas(id_senha, descricao, login, senha, favorito, tipo: String);
     procedure AddFavoritos(id_senha, descricao, login, senha, favorito, tipo: String);
     procedure Deletar(Sender: TObject);
+    procedure AtualizarLanguage(valor: string);
     { Private declarations }
   public
     { Public declarations }
@@ -123,7 +124,7 @@ type
     id_usuario_global : integer;
     ind_fechar_telas : boolean;
     id_senha_global: integer;
-    id_language_global: String;
+    id_language: String;
 
     CodTipo_Selecao : String;
     NomTipo_Selecao : String;
@@ -231,6 +232,18 @@ begin
   end;
 end;
 
+procedure TFormPrincipal.AtualizarLanguage(valor: string);
+begin
+  if id_language = 'US' then
+  begin
+
+  end else
+  if id_language = 'PT' then
+  begin
+
+  end;
+end;
+
 procedure TFormPrincipal.AddFavoritos(id_senha, descricao, login, senha, favorito, tipo: String);
 var
   item : TListViewItem;
@@ -281,7 +294,12 @@ begin
 
     end;
   except on ex:Exception do
-    fancy.Show(TIconDialog.Error, 'Erro', 'Erro ao adicionar lista de senhas: '+ex.message, 'OK');
+    begin
+      if id_language = 'US' then
+        fancy.Show(TIconDialog.Error, 'Error!', 'Error adding password list: '+ex.message, 'OK')
+      else
+        fancy.Show(TIconDialog.Error, 'Error!', 'Erro ao adicionar lista de senhas: '+ex.message, 'OK');
+    end;
   end;
 end;
 
@@ -296,11 +314,17 @@ var
 begin
   if not DM.ExcluirSenhas(id_senha_global, erro) then
   begin
-    fancy.Show(TIconDialog.Error, 'Erro', 'Erro ao excluir: '+erro, 'OK');
+    if id_language = 'US' then
+      fancy.Show(TIconDialog.Error, 'Error!', 'Error in deleting: '+erro, 'TRY AGAIN')
+    else
+      fancy.Show(TIconDialog.Error, 'Erro!', 'Erro ao excluir: '+erro, 'OK');
     exit;
   end else
   begin
-    fancy.Show(TIconDialog.Success, 'Success', 'Registro excluido!', 'OK');
+    if id_language = 'US' then
+      fancy.Show(TIconDialog.Success, 'Success!', 'Record deleted successfully!', 'OK')
+    else
+      fancy.Show(TIconDialog.Success, 'Success!', 'Registro excluido com sucesso!', 'OK');
     ListarSenhas('');
   end;
 end;
@@ -311,6 +335,8 @@ begin
 end;
 
 procedure TFormPrincipal.FormCreate(Sender: TObject);
+var
+  language, erro: string;
 begin
   fancy := TFancyDialog.Create(FormPrincipal);
 
@@ -327,6 +353,11 @@ begin
   imgExcluir.Visible := False;
 
   TabControl.ActiveTab := TabAba1;
+
+  if DM.ValidaLanguage(language, erro) then
+    id_language:= language
+  else
+    fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
 
 end;
 
@@ -356,7 +387,10 @@ begin
       end else
       begin
         Key := 0;
-        fancy.Show(TIconDialog.Question, 'Logout', 'Deseja sair?', 'Sim', ClickLogout, 'Não');
+        if id_language = 'US' then
+          fancy.Show(TIconDialog.Question, 'Logout!', 'Close application?', 'Yes', ClickLogout, 'No')
+        else
+          fancy.Show(TIconDialog.Question, 'Logout!', 'Deseja sair?', 'Sim', ClickLogout, 'Não');
       end;
     end;
   end;
@@ -397,14 +431,20 @@ var
 begin
   if (EdtDescricao.Text = '') then
   begin
-    ShowMessage('Digite uma descrição!');
+    if id_language = 'US' then
+      fancy.Show(TIconDialog.Warning, 'Warning!', 'Description required', 'TRY AGAIN')
+    else
+      fancy.Show(TIconDialog.Warning, 'Ops!', 'Digite uma descrição', 'OK');
     Exit;
   end;
 
   if (EdtLogin.Text = '') or
      (EdtSenha.Text = '') then
   begin
-    ShowMessage('Digite o login e senha!');
+    if id_language = 'US' then
+      fancy.Show(TIconDialog.Warning, 'Warning!', 'Username e password required', 'TRY AGAIN')
+    else
+      fancy.Show(TIconDialog.Warning, 'Ops!', 'Digite um login e senha', 'OK');
     Exit;
   end;
 
@@ -425,7 +465,10 @@ begin
     Exit;
   end else
   begin
-    fancy.Show(TIconDialog.Success, 'Concluido!', 'Conta Cadastrada com Sucesso!', 'OK');
+    if id_language = 'US' then
+      fancy.Show(TIconDialog.Success, 'Success!', 'Registration successfully completed!', 'OK')
+    else
+      fancy.Show(TIconDialog.Success, 'Concluido!', 'Registro realizado com sucesso!', 'OK');
     ListarSenhas('');
     ActTab01.Execute;
     LimpaEdits;
@@ -600,7 +643,10 @@ begin
       if TListItemImage(ItemObject).Name = 'ImageExcluir' then
       begin
         id_senha_global:= StrToInt(lvSenhas.Items[ItemIndex].detail);
-        fancy.Show(TIconDialog.Question, 'Excluir', 'Deseja excluir?', 'Sim', Deletar, 'Não');
+        if id_language = 'US' then
+          fancy.Show(TIconDialog.Question, 'Delete!', 'Delete record?', 'Yes', Deletar, 'No')
+        else
+          fancy.Show(TIconDialog.Question, 'Excluir!', 'Deseja excluir?', 'Sim', Deletar, 'Não');
       end;
     end;
   end;

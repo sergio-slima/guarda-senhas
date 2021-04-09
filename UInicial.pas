@@ -85,7 +85,7 @@ begin
   begin
     BtnVoltar.Text:= 'BACK';
     BtnProximo.Text:= 'NEXT';
-    BtnLogin.Text:= 'LOGIN';
+    BtnLogin.Text:= 'SING IN';
     BtnNovaConta.Text:= 'SIGN UP';
     Label02.Text:= 'Manage all your passwords with this app';
     Label03t.Text:= 'Lets Go?';
