@@ -91,7 +91,7 @@ begin
     Label03t.Text:= 'Lets Go?';
     Label03.Text:= 'You only need to remember a single password';
   end
-  else if valor = 'PT' then
+  else
   begin
     BtnVoltar.Text:= 'VOLTAR';
     BtnProximo.Text:= 'PRÓXIMO';

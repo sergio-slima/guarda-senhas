@@ -31,7 +31,7 @@ type
     EdtPesquisarSenhas: TEdit;
     BtnPesquisar: TImage;
     Layout3: TLayout;
-    Label1: TLabel;
+    LblFavoritos: TLabel;
     BtnHome: TImage;
     Layout6: TLayout;
     Rectangle1: TRectangle;
@@ -41,7 +41,6 @@ type
     BtnPesquisarFavoritos: TImage;
     BtnNovo: TImage;
     Layout5: TLayout;
-    BannerAd1: TBannerAd;
     lvSenhas: TListView;
     BtnFavorito: TImage;
     ActionList1: TActionList;
@@ -59,12 +58,12 @@ type
     RtgTpo: TRectangle;
     EdtTipo: TEdit;
     Rectangle4: TRectangle;
-    Label2: TLabel;
+    LblFavorito: TLabel;
     swFavorito: TSwitch;
     Rectangle5: TRectangle;
     EdtLogin: TEdit;
     Layout10: TLayout;
-    Label3: TLabel;
+    LblCadastrar: TLabel;
     BtnVoltar: TImage;
     Line3: TLine;
     BtnSalvar: TImage;
@@ -236,11 +235,30 @@ procedure TFormPrincipal.AtualizarLanguage(valor: string);
 begin
   if id_language = 'US' then
   begin
+    LblFavoritos.Text:= 'Favorites';
+    EdtPesquisarFavoritos.TextPrompt:= 'Search...';
 
+    EdtPesquisarSenhas.TextPrompt:= 'Search...';
+
+    LblCadastrar.Text:= 'Register';
+    EdtDescricao.TextPrompt:= 'Description';
+    EdtLogin.TextPrompt:= 'Username';
+    EdtSenha.TextPrompt:= 'Password';
+    EdtTipo.TextPrompt:= 'Category';
+    LblFavorito.Text:= 'Favorite:';
   end else
-  if id_language = 'PT' then
   begin
+    LblFavoritos.Text:= 'Favoritos';
+    EdtPesquisarFavoritos.TextPrompt:= 'Pesquisar...';
 
+    EdtPesquisarSenhas.TextPrompt:= 'Pesquisar...';
+
+    LblCadastrar.Text:= 'Cadastrar';
+    EdtDescricao.TextPrompt:= 'Descrição';
+    EdtLogin.TextPrompt:= 'Login';
+    EdtSenha.TextPrompt:= 'Senha';
+    EdtTipo.TextPrompt:= 'Categoria';
+    LblFavorito.Text:= 'Favorito:';
   end;
 end;
 
@@ -358,6 +376,8 @@ begin
     id_language:= language
   else
     fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
+
+  AtualizarLanguage(id_language);
 
 end;
 

@@ -57,6 +57,8 @@ begin
    // table senhas
    conexao.ExecSQL('CREATE TABLE IF NOT EXISTS senhas (id_senha INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, descricao VARCHAR(50) NOT NULL, login VARCHAR(100) NOT NULL, senha VARCHAR(50) NOT NULL, tipo VARCHAR(2) NOT NULL, favorito CHAR(1) NOT NULL);');
 
+   // table configuracoes
+   conexao.ExecSQL('CREATE TABLE IF NOT EXISTS config (id_config INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, language VARCHAR(2) NOT NULL, tela_inicial CHAR(1) NOT NULL);');
 
 //   if ValidaVersao('1.1') then
 //   begin

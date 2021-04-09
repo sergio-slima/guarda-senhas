@@ -85,7 +85,7 @@ begin
     EdtConta_Nascimento.TextPrompt:= 'Birth Date';
     EdtConta_Senha.TextPrompt:= 'Password';
   end
-  else if valor = 'PT' then
+  else
   begin
     LblLogin.Text:= 'Já tenho conta. Clique para fazer login.';
     LblNovaConta.Text:= 'Cadastrar nova conta';
@@ -191,22 +191,25 @@ begin
 end;
 
 procedure TFormLogin.FormCreate(Sender: TObject);
+var
+  language, erro: string;
 begin
   fancy := TFancyDialog.Create(FormLogin);
 
   TabControl1.ActiveTab := TabInicial;
-end;
-
-procedure TFormLogin.FormShow(Sender: TObject);
-var
-  language, erro: string;
-begin
-  TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
 
   if DM.ValidaLanguage(language, erro) then
     id_language:= language
   else
     fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
+
+  AtualizarLanguage(id_language);
+end;
+
+procedure TFormLogin.FormShow(Sender: TObject);
+begin
+  TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
+
 end;
 
 procedure TFormLogin.LblLoginClick(Sender: TObject);

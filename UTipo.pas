@@ -12,7 +12,7 @@ uses
 type
   TFormTipos = class(TForm)
     Layout3: TLayout;
-    Label1: TLabel;
+    LblCategoria: TLabel;
     BtnExplorar_Voltar: TImage;
     Line2: TLine;
     Layout1: TLayout;
@@ -114,6 +114,8 @@ begin
 end;
 
 procedure TFormTipos.FormCreate(Sender: TObject);
+var
+  language, erro: string;
 begin
     fancy := TFancyDialog.Create(FormTipos);
 
@@ -125,6 +127,16 @@ begin
     Img06.Visible := False;
     Img07.Visible := False;
     Img00.Visible := False;
+
+  if DM.ValidaLanguage(language, erro) then
+  begin
+    if language = 'US' then
+      LblCategoria.Text:= 'Categories'
+    else
+      LblCategoria.Text:= 'Categorias';
+  end
+  else
+    fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
 end;
 
 procedure TFormTipos.FormShow(Sender: TObject);
