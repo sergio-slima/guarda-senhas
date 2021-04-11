@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Async, FireDAC.Phys, FireDAC.FMXUI.Wait, Data.DB,
   FireDAC.Comp.Client, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
   FireDAC.Stan.ExprFuncs, FireDAC.Stan.Param, FireDAC.DatS,
-  FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet;
+  FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet, System.IOUtils;
 
 type
   TDM = class(TDataModule)
@@ -20,12 +20,15 @@ type
     { Private declarations }
   public
     { Public declarations }
+    id_language: string;
+
     function ValidaSenha(senha: String; out id_usuario: integer; out erro: string): Boolean;
     function CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
     function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
 
     function SalvarSenhas(descricao, login, senha, favorito, tipo: String; id_usuario: integer; out erro: string): Boolean;
     function ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
+    function BuscarSenha(id_senha: integer; out senha: string; out erro: string): Boolean;
 
     function ValidaLanguage(out language: string; out erro: string): Boolean;
     function ValidaTelaInicial: Boolean;
@@ -43,6 +46,8 @@ uses UPrincipal;
 {$R *.dfm}
 
 procedure TDM.DataModuleCreate(Sender: TObject);
+var
+  language, erro: String;
 begin
    {$IF DEFINED(ANDROID)}
 
@@ -68,6 +73,11 @@ begin
    {$ENDIF}
 
    conexao.Connected := True;
+
+
+   if ValidaLanguage(language, erro) then
+     id_language:= language;
+
 end;
 
 function TDM.ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
@@ -115,7 +125,12 @@ begin
       language:= qry.FieldByName('LANGUAGE').AsString;
       Result := True;
     end else
-      erro:= 'Language not found!';
+    begin
+      if id_language = 'US' then
+        erro:= 'Language not found!'
+      else
+        erro:= 'Línguagem não encontrada!';
+    end;
   finally
     qry.DisposeOf;
   end;
@@ -145,7 +160,12 @@ begin
       id_usuario:= qry.FieldByName('id_usuario').AsInteger;
       Result := True;
     end else
-      erro:= 'Senha inválida ou não existe!';
+    begin
+      if id_language = 'US' then
+        erro:= 'Senha inválida ou não existe!'
+      else
+        erro:= 'Password invalid or no exist!';
+    end;
   finally
     qry.DisposeOf;
   end;
@@ -174,6 +194,43 @@ begin
   end;
 end;
 
+function TDM.BuscarSenha(id_senha: integer; out senha: string; out erro: string): Boolean;
+var
+  qry : TFDQuery;
+begin
+  Result:= False;
+  erro := '';
+
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('SELECT * FROM SENHAS');
+    qry.SQL.Add('WHERE ID_SENHA = :ID_SENHA');
+    qry.ParamByName('ID_SENHA').Value := id_senha;
+    qry.Open;
+
+    if qry.RecordCount > 0 then
+    begin
+      senha:= qry.FieldByName('SENHA').AsString;
+      Result := True;
+    end else
+    begin
+      if id_language = 'US' then
+        erro:= 'Password not found!'
+      else
+        erro:= 'Senha não encontrada!';
+    end;
+
+    Result := True;
+    qry.DisposeOf;
+  except on e:Exception do
+    erro:= e.Message;
+  end;
+end;
+
 function TDM.CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
 var
   qry : TFDQuery;
@@ -197,7 +254,12 @@ begin
     qry.DisposeOf;
     Result:= True;
   except
-    erro:= 'Erro ao cadastrar a conta!';
+    begin
+      if id_language = 'US' then
+        erro:= 'Registry error!'
+      else
+        erro:= 'Erro ao cadastrar conta!';
+    end;
   end;
 end;
 
@@ -238,7 +300,10 @@ begin
       Result:= True;
     end else
     begin
-      erro:= 'Conta não existe!';
+      if id_language = 'US' then
+        erro:= 'Account not registered!'
+      else
+        erro:= 'Conta não existe!';
     end;
 
   finally
@@ -273,7 +338,12 @@ begin
     qry.DisposeOf;
     Result:= True;
   except
-    erro:= 'Erro ao cadastrar registro!';
+    begin
+      if id_language = 'US' then
+        erro:= 'Registry error!'
+      else
+        erro:= 'Erro ao cadastrar registro!';
+    end;
   end;
 end;
 

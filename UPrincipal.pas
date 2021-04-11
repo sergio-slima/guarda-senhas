@@ -11,7 +11,9 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, System.Actions, FMX.ActnList, uFancyDialog;
+  FireDAC.Comp.Client, System.Actions, FMX.ActnList, uFancyDialog,
+
+  FMX.VirtualKeyboard, FMX.Platform;
 
 type
   TFormPrincipal = class(TForm)
@@ -69,7 +71,7 @@ type
     BtnSalvar: TImage;
     ActTab03: TChangeTabAction;
     ImgExcluir: TImage;
-    ImgVerSenha: TImage;
+    ImgBuscarSenha: TImage;
     Img00: TImage;
     Img07: TImage;
     Img06: TImage;
@@ -106,7 +108,7 @@ type
   private
     fancy : TFancyDialog;
 
-    procedure ClickLogout;
+    procedure ClickLogout(Sender: TObject);
     procedure LimpaEdits;
     procedure MudarAba(img: TImage);
     procedure VerSenha;
@@ -218,8 +220,8 @@ begin
         img.Bitmap := Img00.Bitmap;
 
        // Imagem Ver
-      img := TListItemImage(Objects.FindDrawable('ImageVer'));
-      img.Bitmap := ImgVerSenha.Bitmap;
+      img := TListItemImage(Objects.FindDrawable('ImageBuscar'));
+      img.Bitmap := ImgBuscarSenha.Bitmap;
 
        // Imagem Excluir
       img := TListItemImage(Objects.FindDrawable('ImageExcluir'));
@@ -304,7 +306,7 @@ begin
 
        // Imagem Ver
       img := TListItemImage(Objects.FindDrawable('ImageVer'));
-      img.Bitmap := ImgVerSenha.Bitmap;
+      img.Bitmap := ImgBuscarSenha.Bitmap;
 
        // Imagem Ver
       img := TListItemImage(Objects.FindDrawable('ImageExcluir'));
@@ -367,7 +369,7 @@ begin
   Img07.Visible := False;
   Img00.Visible := False;
 
-  imgVerSenha.Visible := False;
+  imgBuscarSenha.Visible := False;
   imgExcluir.Visible := False;
 
   TabControl.ActiveTab := TabAba1;
@@ -399,8 +401,8 @@ begin
       //apenas fecha teclado
     end else
     begin
-      if (TabControl.ActiveTab = Tab02) or
-         (TabControl.ActiveTab = Tab03) then
+      if (TabControl.ActiveTab = TabAba2) or
+         (TabControl.ActiveTab = TabAba3) then
       begin
         Key := 0;
         ActTab01.Execute;
@@ -424,7 +426,7 @@ end;
 
 procedure TFormPrincipal.FormShow(Sender: TObject);
 begin
-  ActTab01.Execute;
+  TabControl.ActiveTab:= TabAba1;
   ListarSenhas('');
 end;
 
@@ -503,7 +505,7 @@ begin
   LimpaEdits;
 end;
 
-procedure TFormPrincipal.ClickLogout;
+procedure TFormPrincipal.ClickLogout(Sender: TObject);
 begin
   Close;
 end;
@@ -650,15 +652,31 @@ end;
 procedure TFormPrincipal.lvSenhasItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
+var
+  senha, erro: String;
 begin
   // CLIQUE NA IMAGEM
   if TListView(sender).Selected <> nil then
   begin
     if ItemObject is TListItemImage then
     begin
-      if TListItemImage(ItemObject).Name = 'ImageVer' then
+      if TListItemImage(ItemObject).Name = 'ImageBuscar' then
       begin
-        fancy.Show(TIconDialog.Success, 'Ops!', 'Em desenvolvimento!', 'OK');
+        id_senha_global:= StrToInt(lvSenhas.Items[ItemIndex].detail);
+        if DM.BuscarSenha(StrToInt(lvSenhas.Items[ItemIndex].detail), senha, erro) then
+        begin
+          if id_language = 'US' then
+            fancy.Show(TIconDialog.Info, 'Password:', senha, 'OK')
+          else
+            fancy.Show(TIconDialog.Info, 'Senha:', senha, 'OK');
+        end else
+        begin
+          if id_language = 'US' then
+            fancy.Show(TIconDialog.Error, 'Ops!', erro, 'OK')
+          else
+            fancy.Show(TIconDialog.Error, 'Ops!', erro, 'OK');
+        end;
+
       end;
       if TListItemImage(ItemObject).Name = 'ImageExcluir' then
       begin
@@ -680,10 +698,10 @@ var
   txt : TListItemText;
 begin
   txt := TListItemText(AItem.Objects.FindDrawable('TxtDescricao'));
-  txt.Width:= lvSenhas.Width - 100;
+  txt.Width:= lvSenhas.Width - 150;
 
   txt := TListItemText(AItem.Objects.FindDrawable('TxtLogin'));
-  txt.Width:= lvSenhas.Width - 100;
+  txt.Width:= lvSenhas.Width - 150;
 end;
 
 end.
