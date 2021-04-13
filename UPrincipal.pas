@@ -122,7 +122,6 @@ type
   public
     { Public declarations }
     id_categoria_global : integer;
-    id_usuario_global : integer;
     ind_fechar_telas : boolean;
     id_senha_global: integer;
     id_language: String;
@@ -480,7 +479,6 @@ begin
                          EdtSenha.Text,
                          favorito,
                          codtipo_selecao,
-                         id_usuario_global,
                          erro) then
   begin
     fancy.Show(TIconDialog.Error, 'Ops!', erro, 'OK');
@@ -568,7 +566,6 @@ begin
     qry.SQL.Clear;
     qry.SQL.Add('SELECT * FROM SENHAS');
     qry.SQL.Add('WHERE FAVORITO = :FAVORITO');
-    qry.SQL.Add('AND ID_USUARIO = :ID_USUARIO');
     if EdtPesquisarFavoritos.Text <> '' then
     begin
       qry.SQL.Add('AND DESCRICAO LIKE :DESCRICAO');
@@ -576,7 +573,6 @@ begin
     end;
     qry.SQL.Add('ORDER BY DESCRICAO');
     qry.ParamByName('FAVORITO').Value := 'S';
-    qry.ParamByName('ID_USUARIO').Value := id_usuario_global;
     qry.Open;
 
     lvFavoritos.Items.Clear;
@@ -615,13 +611,11 @@ begin
     qry.Close;
     qry.SQL.Clear;
     qry.SQL.Add('SELECT * FROM SENHAS');
-    qry.SQL.Add('WHERE ID_USUARIO = :ID_USUARIO');
     if EdtPesquisarSenhas.Text <> '' then
     begin
-      qry.SQL.Add('AND DESCRICAO LIKE :DESCRICAO');
+      qry.SQL.Add('WHERE DESCRICAO LIKE :DESCRICAO');
       qry.ParamByName('DESCRICAO').Value := '%'+EdtPesquisarSenhas.Text+'%';
     end;
-    qry.ParamByName('ID_USUARIO').Value := id_usuario_global;
     qry.SQL.Add('ORDER BY DESCRICAO');
     qry.Open;
 

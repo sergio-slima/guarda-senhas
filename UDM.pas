@@ -26,7 +26,7 @@ type
     function CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
     function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
 
-    function SalvarSenhas(descricao, login, senha, favorito, tipo: String; id_usuario: integer; out erro: string): Boolean;
+    function SalvarSenhas(descricao, login, senha, favorito, tipo: String; out erro: string): Boolean;
     function ExcluirSenhas(id_senha: integer; out erro: string): Boolean;
     function BuscarSenha(id_senha: integer; out senha: string; out erro: string): Boolean;
 
@@ -157,7 +157,6 @@ begin
 
     if qry.RecordCount > 0 then
     begin
-      id_usuario:= qry.FieldByName('id_usuario').AsInteger;
       Result := True;
     end else
     begin
@@ -312,7 +311,7 @@ begin
 end;
 
 function TDM.SalvarSenhas(descricao, login, senha, favorito, tipo: String;
-  id_usuario: integer; out erro: string): Boolean;
+  out erro: string): Boolean;
 var
   qry : TFDQuery;
 begin

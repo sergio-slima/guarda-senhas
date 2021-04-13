@@ -9,6 +9,9 @@ uses
   uFormat, uFancyDialog, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  {$IFDEF ANDROID}
+  Android,KeyguardManager,
+  {$ENDIF}
   FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
@@ -56,6 +59,10 @@ type
     fancy : TFancyDialog;
 
     procedure AtualizarLanguage(valor: string);
+
+    procedure Autenticar;
+    procedure Sucesso(Sender: TObject);
+    procedure Erro(Sender: TObject);
   public
     { Public declarations }
     conta_status: String;
@@ -99,6 +106,18 @@ begin
   end;
 end;
 
+{$IFDEF ANDROID}
+procedure TFormLogin.Autenticar;
+var
+  Android: TEventResultClass;
+begin
+  Android:= TEventResultClass.Create(Self);
+
+  if Android.DeviceSecure then
+    Android.StartActivityKeyGuard(Sucesso, Erro);
+end;
+{$ENDIF}
+
 procedure TFormLogin.BtnAcessarClick(Sender: TObject);
 var
   erro: string;
@@ -112,7 +131,7 @@ begin
       fancy.Show(TIconDialog.Info, 'Ops!', 'Digite sua senha.', 'OK');
     Exit;
   end;
-  if not DM.ValidaSenha(EdtSenha.Text, id_usuario, erro) then
+  if not DM.ValidaSenha(EdtSenha.Text, erro) then
   begin
     fancy.Show(TIconDialog.Error, 'Erro', erro, 'OK');
     Exit;
@@ -121,7 +140,6 @@ begin
   if not Assigned(FormPrincipal) then
     Application.CreateForm(TFormPrincipal, FormPrincipal);
 
-  FormPrincipal.id_usuario_global := id_usuario;
   FormPrincipal.Show;
   Application.MainForm := FormPrincipal;
   FormLogin.Close;
@@ -185,6 +203,12 @@ begin
   Formatar(EdtConta_Nascimento, TFormato.Dt);
 end;
 
+procedure TFormLogin.Erro(Sender: TObject);
+begin
+  fancy.Show(TIconDialog.Error, 'Error!', 'Failed na authentication', 'OK');
+  Exit;
+end;
+
 procedure TFormLogin.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   fancy.DisposeOf;
@@ -238,6 +262,16 @@ begin
   else
     LblCadastrar.Text:='Resetar senha';
   TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
+end;
+
+procedure TFormLogin.Sucesso(Sender: TObject);
+begin
+  if not Assigned(FormPrincipal) then
+    Application.CreateForm(TFormPrincipal, FormPrincipal);
+
+  FormPrincipal.Show;
+  Application.MainForm := FormPrincipal;
+  FormLogin.Close;
 end;
 
 end.
