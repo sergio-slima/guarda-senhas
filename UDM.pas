@@ -22,7 +22,7 @@ type
     { Public declarations }
     id_language: string;
 
-    function ValidaSenha(senha: String; out id_usuario: integer; out erro: string): Boolean;
+    function ValidaSenha(senha: String; out erro: string): Boolean;
     function CadastrarSenha(email, nascimento, senha: String; out erro: string): Boolean;
     function ResetarSenha(email, nascimento, senha: String; out erro: string): Boolean;
 
@@ -136,7 +136,7 @@ begin
   end;
 end;
 
-function TDM.ValidaSenha(senha: String; out id_usuario: integer; out erro: string): Boolean;
+function TDM.ValidaSenha(senha: String; out erro: string): Boolean;
 var
   qry : TFDQuery;
 begin
@@ -151,8 +151,11 @@ begin
     qry.SQL.Clear;
     qry.SQL.Add('SELECT ID_USUARIO, EMAIL, NASCIMENTO, SENHA');
     qry.SQL.Add('FROM USUARIOS');
-    qry.SQL.Add('WHERE SENHA = :SENHA');
-    qry.ParamByName('SENHA').Value := senha;
+    if senha <> '' then
+    begin
+      qry.SQL.Add('WHERE SENHA = :SENHA');
+      qry.ParamByName('SENHA').Value := senha;
+    end;
     qry.Open;
 
     if qry.RecordCount > 0 then
@@ -324,14 +327,13 @@ begin
 
     qry.Close;
     qry.SQL.Clear;
-    qry.SQL.Add('INSERT INTO SENHAS (DESCRICAO, LOGIN, SENHA, FAVORITO, TIPO, ID_USUARIO)');
-    qry.SQL.Add('VALUES (:DESCRICAO, :LOGIN, :SENHA, :FAVORITO, :TIPO, :ID_USUARIO)');
+    qry.SQL.Add('INSERT INTO SENHAS (DESCRICAO, LOGIN, SENHA, FAVORITO, TIPO)');
+    qry.SQL.Add('VALUES (:DESCRICAO, :LOGIN, :SENHA, :FAVORITO, :TIPO)');
     qry.ParamByName('DESCRICAO').Value := descricao;
     qry.ParamByName('LOGIN').Value := login;
     qry.ParamByName('SENHA').Value := senha;
     qry.ParamByName('FAVORITO').Value := favorito;
     qry.ParamByName('TIPO').Value := tipo;
-    qry.ParamByName('ID_USUARIO').Value := id_usuario;
     qry.ExecSQL;
 
     qry.DisposeOf;

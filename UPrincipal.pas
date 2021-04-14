@@ -44,7 +44,6 @@ type
     BtnNovo: TImage;
     Layout5: TLayout;
     lvSenhas: TListView;
-    BtnFavorito: TImage;
     ActionList1: TActionList;
     ActTab01: TChangeTabAction;
     ActTab02: TChangeTabAction;
@@ -81,6 +80,7 @@ type
     Img02: TImage;
     Img01: TImage;
     lvFavoritos: TListView;
+    BtnFavorito: TImage;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);

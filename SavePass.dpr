@@ -8,10 +8,12 @@ uses
   UInicial in 'UInicial.pas' {FormInicial},
   ULogin in 'ULogin.pas' {FormLogin},
   UPrincipal in 'UPrincipal.pas' {FormPrincipal},
+  {$IFDEF ANDROID}
+  Android.KeyguardManager in 'Units\Android.KeyguardManager.pas',
+  DW.Androidapi.JNI.KeyguardManager in 'Units\DW.Androidapi.JNI.KeyguardManager.pas',
+  {$ENDIF}
   uFancyDialog in 'uFancyDialog.pas',
-  uFormat in 'uFormat.pas',
-  Android.KeyguardManager in 'units\Android.KeyguardManager.pas',
-  DW.Androidapi.JNI.KeyguardManager in 'units\DW.Androidapi.JNI.KeyguardManager.pas';
+  uFormat in 'uFormat.pas';
 
 {$R *.res}
 

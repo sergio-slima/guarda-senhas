@@ -10,9 +10,9 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   {$IFDEF ANDROID}
-  Android,KeyguardManager,
+  Android.KeyguardManager,
   {$ENDIF}
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, FMX.Ani;
 
 type
   TFormLogin = class(TForm)
@@ -23,9 +23,7 @@ type
     Rectangle1: TRectangle;
     Image1: TImage;
     Layout1: TLayout;
-    Layout2: TLayout;
     Layout3: TLayout;
-    LblNovaConta: TLabel;
     Rectangle3: TRectangle;
     EdtSenha: TEdit;
     BtnAcessar: TRectangle;
@@ -39,12 +37,18 @@ type
     EdtConta_Senha: TEdit;
     BtnCadastrar: TRectangle;
     LblCadastrar: TLabel;
-    Layout6: TLayout;
-    LblLogin: TLabel;
     Rectangle7: TRectangle;
     EdtConta_Email: TEdit;
     Image2: TImage;
-    LblResetarConta: TLabel;
+    layout_menu: TLayout;
+    Arc1: TArc;
+    FloatAnimation1: TFloatAnimation;
+    img_digital: TImage;
+    Label2: TLabel;
+    Layout2: TLayout;
+    BtnBiometria: TSwitch;
+    Label1: TLabel;
+    Image4: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
@@ -54,18 +58,21 @@ type
     procedure LblLoginClick(Sender: TObject);
     procedure EdtConta_NascimentoTyping(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Label1Click(Sender: TObject);
+    procedure img_digitalClick(Sender: TObject);
   private
     { Private declarations }
     fancy : TFancyDialog;
 
     procedure AtualizarLanguage(valor: string);
 
+    {$IFDEF ANDROID}
     procedure Autenticar;
+    {$ENDIF}
     procedure Sucesso(Sender: TObject);
     procedure Erro(Sender: TObject);
   public
     { Public declarations }
-    conta_status: String;
     id_language: String;
   end;
 
@@ -82,9 +89,9 @@ procedure TFormLogin.AtualizarLanguage(valor: string);
 begin
   if valor = 'US' then
   begin
-    LblLogin.Text:= 'I already have an account. Click to login';
-    LblNovaConta.Text:= 'New Account';
-    LblResetarConta.Text:= 'I forgot my password';
+    //LblLogin.Text:= 'I already have an account. Click to login';
+//    LblNovaConta.Text:= 'New Account';
+//    LblResetarConta.Text:= 'I forgot my password';
     LblAcessar.Text:= 'Log in';
     LblCadastrar.Text:= 'Sign up';
     EdtSenha.TextPrompt:= 'Password';
@@ -94,9 +101,9 @@ begin
   end
   else
   begin
-    LblLogin.Text:= 'Já tenho conta. Clique para fazer login.';
-    LblNovaConta.Text:= 'Cadastrar nova conta';
-    LblResetarConta.Text:= 'Esqueci minha senha';
+   // LblLogin.Text:= 'Já tenho conta. Clique para fazer login.';
+//    LblNovaConta.Text:= 'Cadastrar nova conta';
+//    LblResetarConta.Text:= 'Esqueci minha senha';
     LblAcessar.Text:= 'Acessar';
     LblCadastrar.Text:= 'Cadastrar nova conta';
     EdtSenha.TextPrompt:= 'Senha';
@@ -161,40 +168,20 @@ begin
     Exit;
   end;
 
-  if conta_status = 'N' then
-  begin
-    if not DM.CadastrarSenha(EdtConta_Email.Text,
-                             EdtConta_Nascimento.Text,
-                             EdtConta_Senha.Text,
-                             erro) then
-    begin
-      ShowMessage(erro);
-      Exit;
-    end else
-    begin
-      if id_language = 'US' then
-        fancy.Show(TIconDialog.Success, 'Success!', 'Registered Successfully. Login!', 'OK')
-      else
-        fancy.Show(TIconDialog.Success, 'Success!', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
-      TabControl1.ActiveTab := TabLogin;
-    end;
-  end else if conta_status = 'A' then
-  begin
-    if not DM.ResetarSenha(EdtConta_Email.Text,
+  if not DM.CadastrarSenha(EdtConta_Email.Text,
                            EdtConta_Nascimento.Text,
                            EdtConta_Senha.Text,
                            erro) then
-    begin
-      ShowMessage(erro);
-      Exit;
-    end else
-    begin
-      if id_language = 'US' then
-        fancy.Show(TIconDialog.Success, 'Success!', 'Registered Successfully. Login!', 'OK')
-      else
-        fancy.Show(TIconDialog.Success, 'Success!', 'Senha Resetada com Sucesso. Faça o Login!', 'OK');
-      TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
-    end;
+  begin
+    ShowMessage(erro);
+    Exit;
+  end else
+  begin
+    if id_language = 'US' then
+      fancy.Show(TIconDialog.Success, 'Success!', 'Registered Successfully. Login!', 'OK')
+    else
+      fancy.Show(TIconDialog.Success, 'Success!', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
+    TabControl1.ActiveTab := TabLogin;
   end;
 end;
 
@@ -220,6 +207,8 @@ var
 begin
   fancy := TFancyDialog.Create(FormLogin);
 
+  layout_menu.Margins.Bottom := -220;
+
   TabControl1.ActiveTab := TabInicial;
 
   if DM.ValidaLanguage(language, erro) then
@@ -228,12 +217,43 @@ begin
     fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
 
   AtualizarLanguage(id_language);
+
 end;
 
 procedure TFormLogin.FormShow(Sender: TObject);
+var
+  erro: string;
 begin
-  TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
+  if not DM.ValidaSenha('', erro) then
+    TabControl1.GotoVisibleTab(2, TTabTransition.Slide)
+  else
+    TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
 
+end;
+
+procedure TFormLogin.img_digitalClick(Sender: TObject);
+begin
+  {$IFDEF ANDROID}
+  Autenticar;
+  {$ENDIF}
+end;
+
+procedure TFormLogin.Label1Click(Sender: TObject);
+begin
+    if layout_menu.Tag = 0 then
+    begin
+        BtnBiometria.IsChecked:= True;
+        layout_menu.Tag := 1;
+        layout_menu.AnimateFloat('Margins.Bottom', 0, 0.3,
+                                 TAnimationType.&In, TInterpolationType.Circular);
+    end
+    else
+    begin
+        BtnBiometria.IsChecked:= False;
+        layout_menu.Tag := 0;
+        layout_menu.AnimateFloat('Margins.Bottom', -220, 0.3,
+                                 TAnimationType.&In, TInterpolationType.Circular);
+    end;
 end;
 
 procedure TFormLogin.LblLoginClick(Sender: TObject);
@@ -245,7 +265,6 @@ end;
 procedure TFormLogin.LblNovaContaClick(Sender: TObject);
 begin
 //  TabControl1.ActiveTab := TabNovaConta;
-  conta_status:= 'N';
   if id_language = 'US' then
     LblCadastrar.Text:='Register New Account'
   else
@@ -256,12 +275,11 @@ end;
 procedure TFormLogin.LblResetarContaClick(Sender: TObject);
 begin
 //  TabControl1.ActiveTab := TabNovaConta;
-  conta_status:= 'A';
-  if id_language = 'US' then
-    LblCadastrar.Text:='Reset Password'
-  else
-    LblCadastrar.Text:='Resetar senha';
-  TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
+//  if id_language = 'US' then
+//    LblCadastrar.Text:='Reset Password'
+//  else
+//    LblCadastrar.Text:='Resetar senha';
+//  TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
 end;
 
 procedure TFormLogin.Sucesso(Sender: TObject);
@@ -269,8 +287,8 @@ begin
   if not Assigned(FormPrincipal) then
     Application.CreateForm(TFormPrincipal, FormPrincipal);
 
-  FormPrincipal.Show;
   Application.MainForm := FormPrincipal;
+  FormPrincipal.Show;
   FormLogin.Close;
 end;
 
