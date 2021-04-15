@@ -27,7 +27,6 @@ type
     TabAba2: TTabItem;
     TabAba3: TTabItem;
     Layout4: TLayout;
-    Image5: TImage;
     Layout2: TLayout;
     RtgCidade: TRectangle;
     EdtPesquisarSenhas: TEdit;
@@ -82,6 +81,7 @@ type
     lvFavoritos: TListView;
     BtnFavorito: TImage;
     BannerAd1: TBannerAd;
+    Image1: TImage;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);

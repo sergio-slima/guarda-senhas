@@ -29,7 +29,6 @@ type
     BtnAcessar: TRectangle;
     LblAcessar: TLabel;
     Layout4: TLayout;
-    Image3: TImage;
     Layout5: TLayout;
     Rectangle4: TRectangle;
     EdtConta_Nascimento: TEdit;
@@ -49,6 +48,7 @@ type
     BtnBiometria: TSwitch;
     Label1: TLabel;
     Image4: TImage;
+    Image3: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
