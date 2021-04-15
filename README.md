@@ -1,9 +1,9 @@
 <h1 align="center">
   <img src="./img/logo-oficial.png" alt="Agenda Datas" height="100" width="100">  
-  <p>Guarda - Senhas</p>
+  <p>SavePass</p>
 </h1>
 
-#### Um aplicativo muito útil para você cadastrar suas senhas sem preocupação, onde você só precisará lembrar de apenas uma senha.
+#### Um ótimo aplicativo para você gerenciar todas as suas senhas sem preocupação, pois você só precisará lembrar de apenas uma senha master.
 
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/contribuition-welcome-brightgreen.svg)](http://makeapullrequest.com)
@@ -22,8 +22,8 @@
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
-- 📝 [DELPHI](https://www.w3schools.com/html/)
-- 🖌 [SQLite](https://www.w3schools.com/css/)
+- 📝 [DELPHI](https://www.embarcadero.com/br/products/delphi/starter/free-download)
+- 🖌 [SQLite](https://www.sqlite.org/index.html)
 
 
 ---
