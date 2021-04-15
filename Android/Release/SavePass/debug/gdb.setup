@@ -1,4 +1,0 @@
-set solib-search-path .
-set breakpoint pending on
-file libSavePass.so
-target remote :52128

@@ -81,6 +81,7 @@ type
     Img01: TImage;
     lvFavoritos: TListView;
     BtnFavorito: TImage;
+    BannerAd1: TBannerAd;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -380,6 +381,10 @@ begin
 
   AtualizarLanguage(id_language);
 
+{$IFDEF ANDROID}
+  BannerAd1.TestMode := True;
+  BannerAd1.AdUnitID := 'ca-app-pub-5318830765545492/2572953526';
+{$ENDIF}
 end;
 
 procedure TFormPrincipal.FormKeyUp(Sender: TObject; var Key: Word;
@@ -427,6 +432,10 @@ procedure TFormPrincipal.FormShow(Sender: TObject);
 begin
   TabControl.ActiveTab:= TabAba1;
   ListarSenhas('');
+
+{$IFDEF ANDROID}
+  BannerAd1.LoadAd;
+{$ENDIF}
 end;
 
 procedure TFormPrincipal.BtnNovoClick(Sender: TObject);
