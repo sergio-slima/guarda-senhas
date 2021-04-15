@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./img/logo-oficial.png" alt="Agenda Datas" height="100" width="100">  
+  <img src="./img/logo-oficial2.png" alt="Agenda Datas" height="100" width="100">  
   <p>SavePass</p>
 </h1>
 
