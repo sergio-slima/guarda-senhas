@@ -282,7 +282,7 @@ begin
     qry.SQL.Add('SELECT ID_USUARIO, EMAIL, NASCIMENTO, SENHA');
     qry.SQL.Add('FROM USUARIOS');
     qry.SQL.Add('WHERE EMAIL = :EMAIL');
-    qry.SQL.Add('WHERE NASCIMENTO = :NASCIMENTO');
+    qry.SQL.Add('AND NASCIMENTO = :NASCIMENTO');
     qry.ParamByName('EMAIL').Value := email;
     qry.ParamByName('NASCIMENTO').Value := FormatDateTime('yyyy-mm-dd', StrToDateTime(nascimento));
     qry.Open;

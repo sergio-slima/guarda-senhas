@@ -382,7 +382,6 @@ begin
   AtualizarLanguage(id_language);
 
 {$IFDEF ANDROID}
-  BannerAd1.TestMode := True;
   BannerAd1.AdUnitID := 'ca-app-pub-5318830765545492/2572953526';
 {$ENDIF}
 end;

@@ -231,7 +231,7 @@ procedure TFormInicial.NavegacaoAba(cont: integer);
 begin
   if (cont <> -1) and (RdbUS.IsChecked = false) and (RdbPT.IsChecked = false) then
   begin
-    fancy.Show(TIconDialog.Info, 'Ops!', 'Select the Language!', 'OK');
+    fancy.Show(TIconDialog.Warning, 'Ops!', 'Select the Language!', 'OK');
     Exit;
   end;
 

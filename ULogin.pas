@@ -49,8 +49,11 @@ type
     Image4: TImage;
     Image3: TImage;
     Image2: TImage;
-    Image5: TImage;
-    Image6: TImage;
+    BtnEnUs: TImage;
+    BtnResetar: TImage;
+    BtnPtBr: TImage;
+    FDQuery1: TFDQuery;
+    BtnVoltar: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
@@ -62,12 +65,15 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Label1Click(Sender: TObject);
     procedure img_digitalClick(Sender: TObject);
-    procedure Image5Click(Sender: TObject);
+    procedure BtnEnUsClick(Sender: TObject);
+    procedure BtnPtBrClick(Sender: TObject);
+    procedure BtnResetarClick(Sender: TObject);
   private
     { Private declarations }
     fancy : TFancyDialog;
 
     procedure AtualizarLanguage(valor: string);
+    procedure UpdateLanguage(valor: string);
 
     {$IFDEF ANDROID}
     procedure Autenticar;
@@ -77,6 +83,7 @@ type
   public
     { Public declarations }
     id_language: String;
+    status_user: String;
   end;
 
 var
@@ -102,6 +109,8 @@ begin
     EdtConta_Email.TextPrompt:= 'Email';
     EdtConta_Nascimento.TextPrompt:= 'Birth Date';
     EdtConta_Senha.TextPrompt:= 'Password';
+    BtnEnUs.Visible:= True;
+    BtnPtBr.Visible:= False;
   end
   else
   begin
@@ -115,6 +124,8 @@ begin
     EdtConta_Email.TextPrompt:= 'Email';
     EdtConta_Nascimento.TextPrompt:= 'Data Nascimento';
     EdtConta_Senha.TextPrompt:= 'Senha';
+    BtnEnUs.Visible:= False;
+    BtnPtBr.Visible:= True;
   end;
 end;
 
@@ -138,9 +149,9 @@ begin
   if EdtSenha.Text = '' then
   begin
     if id_language = 'US' then
-      fancy.Show(TIconDialog.Info, 'Ops!', 'Password required.', 'TRY AGAIN')
+      fancy.Show(TIconDialog.Warning, 'Ops!', 'Password required.', 'TRY AGAIN')
     else
-      fancy.Show(TIconDialog.Info, 'Ops!', 'Digite sua senha.', 'OK');
+      fancy.Show(TIconDialog.Warning, 'Ops!', 'Digite sua senha.', 'OK');
     Exit;
   end;
   if not DM.ValidaSenha(EdtSenha.Text, erro) then
@@ -167,26 +178,47 @@ begin
      (EdtConta_Senha.Text = '') then
   begin
     if id_language = 'US' then
-      fancy.Show(TIconDialog.Info, 'Ops!', 'All required fields', 'TRY AGAIN')
+      fancy.Show(TIconDialog.Warning, 'Ops!', 'All required fields', 'TRY AGAIN')
     else
-      fancy.Show(TIconDialog.Info, 'Ops!', 'Preencha todos os campos', 'OK');
+      fancy.Show(TIconDialog.Warning, 'Ops!', 'Preencha todos os campos', 'OK');
     Exit;
   end;
 
-  if not DM.CadastrarSenha(EdtConta_Email.Text,
-                           EdtConta_Nascimento.Text,
-                           EdtConta_Senha.Text,
-                           erro) then
+  if status_user = 'N' then
   begin
-    ShowMessage(erro);
-    Exit;
+    if not DM.CadastrarSenha(EdtConta_Email.Text,
+                             EdtConta_Nascimento.Text,
+                             EdtConta_Senha.Text,
+                             erro) then
+    begin
+      ShowMessage(erro);
+      Exit;
+    end else
+    begin
+      if id_language = 'US' then
+        fancy.Show(TIconDialog.Success, 'Success!', 'Registered Successfully. Login!', 'OK')
+      else
+        fancy.Show(TIconDialog.Success, 'Success!', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
+      TabControl1.ActiveTab := TabLogin;
+    end;
   end else
-  begin
-    if id_language = 'US' then
-      fancy.Show(TIconDialog.Success, 'Success!', 'Registered Successfully. Login!', 'OK')
-    else
-      fancy.Show(TIconDialog.Success, 'Success!', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
-    TabControl1.ActiveTab := TabLogin;
+    begin
+    if not DM.ResetarSenha(EdtConta_Email.Text,
+                             EdtConta_Nascimento.Text,
+                             EdtConta_Senha.Text,
+                             erro) then
+    begin
+      ShowMessage(erro);
+      Exit;
+    end else
+    begin
+      if id_language = 'US' then
+        fancy.Show(TIconDialog.Success, 'Success!', 'Registered Successfully. Login!', 'OK')
+      else
+        fancy.Show(TIconDialog.Success, 'Success!', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
+
+      TabControl1.ActiveTab := TabLogin;
+    end;
   end;
 end;
 
@@ -213,7 +245,7 @@ begin
   fancy := TFancyDialog.Create(FormLogin);
 
   layout_menu.Margins.Bottom := -220;
-
+  status_user:= 'N';
   TabControl1.ActiveTab := TabInicial;
 
   if DM.ValidaLanguage(language, erro) then
@@ -236,21 +268,31 @@ begin
 
 end;
 
-procedure TFormLogin.Image5Click(Sender: TObject);
-var
-  language, erro: string;
+procedure TFormLogin.BtnEnUsClick(Sender: TObject);
 begin
+  UpdateLanguage('PT');
+
+end;
+
+procedure TFormLogin.BtnPtBrClick(Sender: TObject);
+begin
+  UpdateLanguage('US');
+end;
+
+procedure TFormLogin.BtnResetarClick(Sender: TObject);
+begin
+  status_user:= 'R';
+
   if id_language = 'US' then
-    language := 'PT'
-  else
-    language:= 'US';
-
-  if DM.ValidaLanguage(language, erro) then
-    id_language:= language
-  else
-    fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
-
-  AtualizarLanguage(id_language);
+  begin
+    LblCadastrar.Text:='Reset Password';
+    EdtConta_Senha.TextPrompt:='New Password';
+  end else
+  begin
+    LblCadastrar.Text:='Resetar Senha';
+    EdtConta_Senha.TextPrompt:='Nova Senha';
+  end;
+  TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
 end;
 
 procedure TFormLogin.img_digitalClick(Sender: TObject);
@@ -312,6 +354,29 @@ begin
   Application.MainForm := FormPrincipal;
   FormPrincipal.Show;
   FormLogin.Close;
+end;
+
+procedure TFormLogin.UpdateLanguage(valor: string);
+var
+  qry : TFDQuery;
+begin
+  try
+    qry := TFDQuery.Create(nil);
+    qry.Connection := DM.Conexao;
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Add('UPDATE CONFIG SET LANGUAGE = :LANGUAGE,');
+    qry.SQL.Add('WHERE LANGUAGE = :LANG_ATUAL');
+    qry.ParamByName('LANGUAGE').Value := valor;
+    qry.ParamByName('LANG_ATUAL').Value := id_language;
+    qry.ExecSQL;
+
+    qry.DisposeOf;
+
+    AtualizarLanguage(valor);
+  except on ex:Exception do
+    fancy.Show(TIconDialog.Error, 'Error!', ex.Message, 'OK');
+  end;
 end;
 
 end.
