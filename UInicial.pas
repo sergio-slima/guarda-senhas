@@ -88,8 +88,8 @@ begin
     BtnLogin.Text:= 'SING IN';
     BtnNovaConta.Text:= 'SIGN UP';
     Label02.Text:= 'Manage all your passwords with this app';
-    Label03t.Text:= 'Lets Go?';
-    Label03.Text:= 'You only need to remember a single password';
+    Label03t.Text:= 'Authentication';
+    Label03.Text:= 'Use digital sensor for authentication';
   end
   else
   begin
@@ -98,8 +98,8 @@ begin
     BtnLogin.Text:= 'ACESSAR';
     BtnNovaConta.Text:= 'NOVA CONTA';
     Label02.Text:= 'Gerencie todas as suas senhas com esse app';
-    Label03t.Text:= 'Vamos lá?';
-    Label03.Text:= 'Só precisará lembrar de uma única senha';
+    Label03t.Text:= 'Autenticação';
+    Label03.Text:= 'Use o sensor digital para autenticação';
   end;
 end;
 

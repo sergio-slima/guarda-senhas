@@ -43,12 +43,14 @@ type
     Arc1: TArc;
     FloatAnimation1: TFloatAnimation;
     img_digital: TImage;
-    Label2: TLabel;
+    LblDigital: TLabel;
     Layout2: TLayout;
     BtnBiometria: TSwitch;
     Label1: TLabel;
     Image4: TImage;
     Image3: TImage;
+    BtnNovo: TImage;
+    Image5: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
@@ -94,6 +96,7 @@ begin
 //    LblResetarConta.Text:= 'I forgot my password';
     LblAcessar.Text:= 'Log in';
     LblCadastrar.Text:= 'Sign up';
+    LblDigital.Text:= 'Touch digital sensor for authentication';
     EdtSenha.TextPrompt:= 'Password';
     EdtConta_Email.TextPrompt:= 'Email';
     EdtConta_Nascimento.TextPrompt:= 'Birth Date';
@@ -106,6 +109,7 @@ begin
 //    LblResetarConta.Text:= 'Esqueci minha senha';
     LblAcessar.Text:= 'Acessar';
     LblCadastrar.Text:= 'Cadastrar nova conta';
+    LblDigital.Text:= 'Toque no sensor de digital para autenticação';
     EdtSenha.TextPrompt:= 'Senha';
     EdtConta_Email.TextPrompt:= 'Email';
     EdtConta_Nascimento.TextPrompt:= 'Data Nascimento';
