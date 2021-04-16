@@ -38,7 +38,6 @@ type
     LblCadastrar: TLabel;
     Rectangle7: TRectangle;
     EdtConta_Email: TEdit;
-    Image2: TImage;
     layout_menu: TLayout;
     Arc1: TArc;
     FloatAnimation1: TFloatAnimation;
@@ -49,8 +48,9 @@ type
     Label1: TLabel;
     Image4: TImage;
     Image3: TImage;
-    BtnNovo: TImage;
+    Image2: TImage;
     Image5: TImage;
+    Image6: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnAcessarClick(Sender: TObject);
@@ -62,6 +62,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Label1Click(Sender: TObject);
     procedure img_digitalClick(Sender: TObject);
+    procedure Image5Click(Sender: TObject);
   private
     { Private declarations }
     fancy : TFancyDialog;
@@ -233,6 +234,23 @@ begin
   else
     TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
 
+end;
+
+procedure TFormLogin.Image5Click(Sender: TObject);
+var
+  language, erro: string;
+begin
+  if id_language = 'US' then
+    language := 'PT'
+  else
+    language:= 'US';
+
+  if DM.ValidaLanguage(language, erro) then
+    id_language:= language
+  else
+    fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
+
+  AtualizarLanguage(id_language);
 end;
 
 procedure TFormLogin.img_digitalClick(Sender: TObject);
