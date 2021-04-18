@@ -378,7 +378,7 @@ begin
         RectIcon2.AnimateFloatDelay('Width', 6, 0.1, 0.25);
         }
         LabelIcon.Margins.Bottom := 5;
-        LabelIcon.Text := 'i';
+        LabelIcon.Text := '***';
         LabelIcon.Font.Size := 70;
     end;
 

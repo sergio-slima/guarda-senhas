@@ -45,7 +45,7 @@ type
     LblDigital: TLabel;
     Layout2: TLayout;
     BtnBiometria: TSwitch;
-    Label1: TLabel;
+    LblLeitor: TLabel;
     Image4: TImage;
     Image3: TImage;
     Image2: TImage;
@@ -63,11 +63,12 @@ type
     procedure LblLoginClick(Sender: TObject);
     procedure EdtConta_NascimentoTyping(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Label1Click(Sender: TObject);
+    procedure LblLeitorClick(Sender: TObject);
     procedure img_digitalClick(Sender: TObject);
     procedure BtnEnUsClick(Sender: TObject);
     procedure BtnPtBrClick(Sender: TObject);
     procedure BtnResetarClick(Sender: TObject);
+    procedure BtnVoltarClick(Sender: TObject);
   private
     { Private declarations }
     fancy : TFancyDialog;
@@ -104,6 +105,7 @@ begin
 //    LblResetarConta.Text:= 'I forgot my password';
     LblAcessar.Text:= 'Log in';
     LblCadastrar.Text:= 'Sign up';
+    LblLeitor.Text:= 'Sensor Digital';
     LblDigital.Text:= 'Touch digital sensor for authentication';
     EdtSenha.TextPrompt:= 'Password';
     EdtConta_Email.TextPrompt:= 'Email';
@@ -119,6 +121,7 @@ begin
 //    LblResetarConta.Text:= 'Esqueci minha senha';
     LblAcessar.Text:= 'Acessar';
     LblCadastrar.Text:= 'Cadastrar nova conta';
+    LblLeitor.Text:= 'Leitor Digital';
     LblDigital.Text:= 'Toque no sensor de digital para autenticação';
     EdtSenha.TextPrompt:= 'Senha';
     EdtConta_Email.TextPrompt:= 'Email';
@@ -200,6 +203,10 @@ begin
       else
         fancy.Show(TIconDialog.Success, 'Success!', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
       TabControl1.ActiveTab := TabLogin;
+
+      EdtConta_Email.Text:= '';
+      EdtConta_Nascimento.Text:= '';
+      EdtConta_Senha.Text:= '';
     end;
   end else
     begin
@@ -218,6 +225,10 @@ begin
         fancy.Show(TIconDialog.Success, 'Success!', 'Cadastrado com Sucesso. Faça o Login!', 'OK');
 
       TabControl1.ActiveTab := TabLogin;
+
+      EdtConta_Email.Text:= '';
+      EdtConta_Nascimento.Text:= '';
+      EdtConta_Senha.Text:= '';
     end;
   end;
 end;
@@ -295,6 +306,11 @@ begin
   TabControl1.GotoVisibleTab(2, TTabTransition.Slide);
 end;
 
+procedure TFormLogin.BtnVoltarClick(Sender: TObject);
+begin
+  TabControl1.GotoVisibleTab(1, TTabTransition.Slide);
+end;
+
 procedure TFormLogin.img_digitalClick(Sender: TObject);
 begin
   {$IFDEF ANDROID}
@@ -302,7 +318,7 @@ begin
   {$ENDIF}
 end;
 
-procedure TFormLogin.Label1Click(Sender: TObject);
+procedure TFormLogin.LblLeitorClick(Sender: TObject);
 begin
     if layout_menu.Tag = 0 then
     begin
@@ -365,7 +381,7 @@ begin
     qry.Connection := DM.Conexao;
     qry.Close;
     qry.SQL.Clear;
-    qry.SQL.Add('UPDATE CONFIG SET LANGUAGE = :LANGUAGE,');
+    qry.SQL.Add('UPDATE CONFIG SET LANGUAGE = :LANGUAGE');
     qry.SQL.Add('WHERE LANGUAGE = :LANG_ATUAL');
     qry.ParamByName('LANGUAGE').Value := valor;
     qry.ParamByName('LANG_ATUAL').Value := id_language;

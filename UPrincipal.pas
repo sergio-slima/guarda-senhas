@@ -655,7 +655,7 @@ procedure TFormPrincipal.lvSenhasItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 var
-  senha, erro: String;
+  email, senha, erro: String;
 begin
   // CLIQUE NA IMAGEM
   if TListView(sender).Selected <> nil then
@@ -665,12 +665,12 @@ begin
       if TListItemImage(ItemObject).Name = 'ImageBuscar' then
       begin
         id_senha_global:= StrToInt(lvSenhas.Items[ItemIndex].detail);
-        if DM.BuscarSenha(StrToInt(lvSenhas.Items[ItemIndex].detail), senha, erro) then
+        if DM.BuscarSenha(StrToInt(lvSenhas.Items[ItemIndex].detail), email, senha, erro) then
         begin
           if id_language = 'US' then
-            fancy.Show(TIconDialog.Info, 'Password:', senha, 'OK')
+            fancy.Show(TIconDialog.Info, 'Password: '+senha, 'User: '+email, 'OK')
           else
-            fancy.Show(TIconDialog.Info, 'Senha:', senha, 'OK');
+            fancy.Show(TIconDialog.Info, 'Senha: '+senha, 'Usuário: '+email, 'OK');
         end else
         begin
           if id_language = 'US' then
