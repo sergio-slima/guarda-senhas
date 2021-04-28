@@ -210,7 +210,7 @@ begin
     qry.Close;
     qry.SQL.Clear;
     qry.SQL.Add('SELECT * FROM SENHAS');
-    qry.SQL.Add('WHERE EMAIL = :EMAIL AND ID_SENHA = :ID_SENHA');
+//    qry.SQL.Add('WHERE EMAIL = :EMAIL AND ID_SENHA = :ID_SENHA');
     qry.ParamByName('ID_SENHA').Value := id_senha;
     qry.Open;
 
