@@ -11,9 +11,10 @@ uses
   {$IFDEF ANDROID}
   Android.KeyguardManager in 'Units\Android.KeyguardManager.pas',
   DW.Androidapi.JNI.KeyguardManager in 'Units\DW.Androidapi.JNI.KeyguardManager.pas',
-  {$ENDIF}
+  {$ENDIF }
   uFancyDialog in 'uFancyDialog.pas',
-  uFormat in 'uFormat.pas';
+  uFormat in 'uFormat.pas' {$R *.res},
+  uMD5 in 'units\uMD5.pas';
 
 {$R *.res}
 

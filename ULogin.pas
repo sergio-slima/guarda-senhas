@@ -12,7 +12,7 @@ uses
   {$IFDEF ANDROID}
   Android.KeyguardManager,
   {$ENDIF}
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client, FMX.Ani;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, FMX.Ani, uMD5;
 
 type
   TFormLogin = class(TForm)

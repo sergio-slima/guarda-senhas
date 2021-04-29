@@ -41,7 +41,7 @@ implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
-uses UPrincipal;
+uses UPrincipal, uMD5;
 
 {$R *.dfm}
 
@@ -154,7 +154,7 @@ begin
     if senha <> '' then
     begin
       qry.SQL.Add('WHERE SENHA = :SENHA');
-      qry.ParamByName('SENHA').Value := senha;
+      qry.ParamByName('SENHA').Value := Encripta(senha);
     end;
     qry.Open;
 
@@ -199,6 +199,7 @@ end;
 function TDM.BuscarSenha(id_senha: integer; out email: string; out senha: string; out erro: string): Boolean;
 var
   qry : TFDQuery;
+  lsSenha: String;
 begin
   Result:= False;
   erro := '';
@@ -209,15 +210,15 @@ begin
 
     qry.Close;
     qry.SQL.Clear;
-    qry.SQL.Add('SELECT * FROM SENHAS');
-//    qry.SQL.Add('WHERE EMAIL = :EMAIL AND ID_SENHA = :ID_SENHA');
+    qry.SQL.Add('SELECT ID_SENHA, LOGIN, SENHA FROM SENHAS');
+    qry.SQL.Add('WHERE ID_SENHA = :ID_SENHA');
     qry.ParamByName('ID_SENHA').Value := id_senha;
     qry.Open;
 
     if qry.RecordCount > 0 then
     begin
-      email:= qry.FieldByName('EMAIL').AsString;
-      senha:= qry.FieldByName('SENHA').AsString;
+      email:= qry.FieldByName('LOGIN').AsString;
+      senha:= Criptografar(qry.FieldByName('SENHA').AsString);
       Result := True;
     end else
     begin
@@ -251,7 +252,7 @@ begin
     qry.SQL.Add('VALUES (:EMAIL, :NASCIMENTO, :SENHA)');
     qry.ParamByName('EMAIL').Value := email;
     qry.ParamByName('NASCIMENTO').Value := FormatDateTime('yyyy-mm-dd', StrToDateTime(nascimento));
-    qry.ParamByName('SENHA').Value := senha;
+    qry.ParamByName('SENHA').Value := Encripta(senha);
     qry.ExecSQL;
 
     qry.DisposeOf;
@@ -297,7 +298,7 @@ begin
       qry.SQL.Add('UPDATE USUARIOS SET SENHA = :SENHA');
       qry.SQL.Add('WHERE ID_USUARIO = :ID_USUARIO');
       qry.ParamByName('ID_USUARIO').Value := id_usuario;
-      qry.ParamByName('SENHA').Value := senha;
+      qry.ParamByName('SENHA').Value := Encripta(senha);
       qry.ExecSQL;
 
       Result:= True;
@@ -332,7 +333,7 @@ begin
     qry.SQL.Add('VALUES (:DESCRICAO, :LOGIN, :SENHA, :FAVORITO, :TIPO)');
     qry.ParamByName('DESCRICAO').Value := descricao;
     qry.ParamByName('LOGIN').Value := login;
-    qry.ParamByName('SENHA').Value := senha;
+    qry.ParamByName('SENHA').Value := Criptografar(senha);
     qry.ParamByName('FAVORITO').Value := favorito;
     qry.ParamByName('TIPO').Value := tipo;
     qry.ExecSQL;

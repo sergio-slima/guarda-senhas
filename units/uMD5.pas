@@ -44,8 +44,8 @@ var
   Simbolos : array [0..4] of String;
   x        : Integer;
 begin
-    Simbolos[1]:='ABCDEFGHIJLMNOPQRSTUVXZYWK ~!@#$%^&*()';
-    Simbolos[2]:= '1234567890abcdefghijlmnopqrstuvxzywk';
+    Simbolos[1]:='FEDCBALMNOPQGHIJRSTUVYWKXZ ~!@#$%^&*()';
+    Simbolos[2]:= '3210456987abcjlmnopqdefghirstuywkvxz';
     Simbolos[3]:= 'ÂÀ©Øû×ƒçêùÿ5Üø£úñÑªº¿®¬¼ëèïÙıÄÅÉæÆôöò»Á';
     Simbolos[4]:= 'áâäàåíóÇüé¾¶§÷ÎÏ-+ÌÓß¸°¨·¹³²Õµşîì¡«½';
 
