@@ -149,16 +149,40 @@ begin
 end;
 
 procedure TFormTipos.ListarTipos(pesquisar: string; clear: boolean);
+var
+  language, erro: string;
 begin
+  if DM.ValidaLanguage(language, erro) then
+  begin
+    if language = 'US' then
+    begin
+      LblCategoria.Text:= 'Categorias';
 
-  AddTipos('01', 'Emails');
-  AddTipos('02', 'Redes Sociais');
-  AddTipos('03', 'Sistemas');
-  AddTipos('04', 'Jogos');
-  AddTipos('05', 'Cursos');
-  AddTipos('06', 'Banco');
-  AddTipos('07', 'Cartões');
-  AddTipos('00', 'Outros');
+      AddTipos('01', 'Emails');
+      AddTipos('02', 'Networks');
+      AddTipos('03', 'Sytems');
+      AddTipos('04', 'Games');
+      AddTipos('05', 'Schools');
+      AddTipos('06', 'Bank');
+      AddTipos('07', 'Cards');
+      AddTipos('00', 'Others');
+    end
+    else
+    begin
+      LblCategoria.Text:= 'Categorias';
+
+      AddTipos('01', 'Emails');
+      AddTipos('02', 'Redes Sociais');
+      AddTipos('03', 'Sistemas');
+      AddTipos('04', 'Jogos');
+      AddTipos('05', 'Cursos');
+      AddTipos('06', 'Banco');
+      AddTipos('07', 'Cartões');
+      AddTipos('00', 'Outros');
+    end;
+  end
+  else
+    fancy.Show(TIconDialog.Error, 'Error!', erro, 'OK');
 
 end;
 

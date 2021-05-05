@@ -79,9 +79,9 @@ type
     Img02: TImage;
     Img01: TImage;
     lvFavoritos: TListView;
-    BtnFavorito: TImage;
     BannerAd1: TBannerAd;
     Image1: TImage;
+    BtnFavorito: TImage;
     procedure FormShow(Sender: TObject);
     procedure ImgAba4Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
